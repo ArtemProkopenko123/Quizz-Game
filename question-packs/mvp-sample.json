@@ -1,0 +1,26 @@
+{
+  "id": "mvp-general-knowledge",
+  "title": "MVP General Knowledge",
+  "version": 1,
+  "language": "en",
+  "questions": [
+    {
+      "id": "q-001",
+      "prompt": "Which planet is known as the Red Planet?",
+      "options": ["Earth", "Mars", "Jupiter", "Venus"],
+      "correctAnswerIndex": 1
+    },
+    {
+      "id": "q-002",
+      "prompt": "How many continents are there on Earth?",
+      "options": ["5", "6", "7", "8"],
+      "correctAnswerIndex": 2
+    },
+    {
+      "id": "q-003",
+      "prompt": "What gas do plants primarily absorb from the atmosphere?",
+      "options": ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
+      "correctAnswerIndex": 2
+    }
+  ]
+}
