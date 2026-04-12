@@ -5,5 +5,6 @@ node_modules
 **/.next
 backend/dist
 frontend/.next
+**/.env*.local
 *.md
 .DS_Store
