@@ -30,7 +30,10 @@ export function LobbyView({ emitReady, emitStartGame }: Props) {
             {readyCount}/{players.length} готовы
           </p>
         </div>
-        <CodeBadge code={code} />
+        <div className="flex items-center gap-2">
+          {isHost && <ShareIcon code={code} />}
+          <CodeBadge code={code} />
+        </div>
       </header>
 
       {/* Player list */}
@@ -100,6 +103,44 @@ function CodeBadge({ code }: { code: string }) {
       <span className="text-xs font-medium text-white/40">
         {copied ? '✓' : '⎘'}
       </span>
+    </button>
+  );
+}
+
+// ── ShareIcon ────────────────────────────────────────────────
+function ShareIcon({ code }: { code: string }) {
+  const [done, setDone] = useState(false);
+
+  async function handleShare() {
+    const url = `${window.location.origin}/join/${code}`;
+    const shareData = { title: 'Присоединись к игре QUIZZ!', text: `Код: ${code}`, url };
+
+    if (navigator.share && navigator.canShare?.(shareData)) {
+      await navigator.share(shareData);
+    } else {
+      await navigator.clipboard.writeText(url);
+      setDone(true);
+      setTimeout(() => setDone(false), 2000);
+    }
+  }
+
+  return (
+    <button
+      onClick={handleShare}
+      title="Поделиться ссылкой"
+      className="flex size-10 cursor-pointer items-center justify-center rounded-xl transition-all duration-150 active:scale-90"
+      style={{ background: done ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.08)', border: `1px solid ${done ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.12)'}` }}
+    >
+      {done ? (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      ) : (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+        </svg>
+      )}
     </button>
   );
 }

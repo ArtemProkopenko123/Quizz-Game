@@ -62,14 +62,18 @@ function DarkButton({ variant = 'primary', loading, className = '', children, di
 }
 
 /* ── Main form ─────────────────────────────────────────────── */
-export function HomeForm() {
+interface HomeFormProps {
+  initialCode?: string;
+}
+
+export function HomeForm({ initialCode }: HomeFormProps) {
   const router = useRouter();
   const setCredentials = useSessionStore((s) => s.setCredentials);
 
-  const [mode, setMode] = useState<Mode>('pick');
+  const [mode, setMode] = useState<Mode>(initialCode ? 'join' : 'pick');
   const [name, setName] = useState('');
   const [color, setColor] = useState(COLORS[0] ?? '#ef4444');
-  const [joinCode, setJoinCode] = useState('');
+  const [joinCode, setJoinCode] = useState(initialCode ?? '');
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
 

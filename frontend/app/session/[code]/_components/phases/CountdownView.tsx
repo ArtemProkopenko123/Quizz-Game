@@ -35,7 +35,7 @@ export function CountdownView() {
             className="transition-[stroke-dashoffset] duration-100"
           />
         </svg>
-        <span className="text-5xl font-bold tabular-nums text-zinc-900">
+        <span className="text-5xl font-bold tabular-nums text-white">
           {secondsLeft}
         </span>
       </div>
