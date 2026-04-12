@@ -4,24 +4,30 @@ import {
   SubscribeMessage,
   ConnectedSocket,
   MessageBody,
+  OnGatewayInit,
 } from '@nestjs/websockets';
-import { forwardRef, Inject, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { GameplayService } from './gameplay.service';
+import { GameplayEmitterService } from './gameplay-emitter.service';
 import { GameStartDto } from './dto/game-start.dto';
 import { AnswerSubmitDto } from './dto/answer-submit.dto';
 
 @WebSocketGateway({ cors: { origin: '*' } })
-export class GameplayGateway {
+export class GameplayGateway implements OnGatewayInit {
   @WebSocketServer()
   server!: Server;
 
   private readonly logger = new Logger(GameplayGateway.name);
 
   constructor(
-    @Inject(forwardRef(() => GameplayService))
     private readonly gameplayService: GameplayService,
+    private readonly emitter: GameplayEmitterService,
   ) {}
+
+  afterInit(server: Server): void {
+    this.emitter.setServer(server);
+  }
 
   @SubscribeMessage('game:start')
   async handleGameStart(
@@ -54,10 +60,5 @@ export class GameplayGateway {
       return { event: 'answer:accepted', data: { scoreDelta: result.scoreDelta } };
     }
     return { event: 'answer:rejected', data: { code: result.error, message: result.error } };
-  }
-
-  /** Called by GameplayService to broadcast to a session room */
-  emitToSession(sessionId: string, event: string, data: unknown): void {
-    this.server.to(sessionId).emit(event, data);
   }
 }

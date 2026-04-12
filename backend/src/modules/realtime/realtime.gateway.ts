@@ -12,6 +12,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Session } from '../sessions/session.entity';
 import { Player } from '../players/player.entity';
+import { Round } from '../gameplay/round.entity';
+import { Answer } from '../gameplay/answer.entity';
+import { QuestionsService } from '../questions/questions.service';
 import { SessionPhase } from '../../common/enums/session-phase.enum';
 import { buildSessionSnapshot } from './session-snapshot.builder';
 import type { RealtimeError } from './realtime.types';
@@ -34,6 +37,14 @@ export class RealtimeGateway implements OnGatewayDisconnect {
 
     @InjectRepository(Player)
     private readonly playerRepo: Repository<Player>,
+
+    @InjectRepository(Round)
+    private readonly roundRepo: Repository<Round>,
+
+    @InjectRepository(Answer)
+    private readonly answerRepo: Repository<Answer>,
+
+    private readonly questionsService: QuestionsService,
   ) {}
 
   // ── session:connect ──────────────────────────────────────────
@@ -70,6 +81,9 @@ export class RealtimeGateway implements OnGatewayDisconnect {
     const snapshot = buildSessionSnapshot(session, players, playerId);
 
     socket.emit('session:snapshot', snapshot);
+
+    // Restore mid-game state for reconnecting player
+    await this.emitMidGameState(socket, session, playerId);
 
     socket.to(sessionId).emit('lobby:updated', snapshot);
 
@@ -149,6 +163,78 @@ export class RealtimeGateway implements OnGatewayDisconnect {
 
     this.server.to(sessionId).emit('lobby:updated', snapshot);
     return { ok: true };
+  }
+
+  private async emitMidGameState(
+    socket: Socket,
+    session: Session,
+    playerId: string,
+  ): Promise<void> {
+    const { phase } = session;
+
+    const isQuestion =
+      phase === SessionPhase.QUESTION_OPEN ||
+      phase === SessionPhase.QUESTION_CLOSED ||
+      phase === SessionPhase.ROUND_RESULT;
+
+    if (!isQuestion) return;
+
+    // Find the round that corresponds to the current round index
+    const round = await this.roundRepo.findOne({
+      where: { sessionId: session.id, roundIndex: session.currentRoundIndex - (phase === SessionPhase.ROUND_RESULT ? 1 : 0) },
+    });
+
+    if (!round) return;
+
+    let pack: ReturnType<QuestionsService['findPackById']>;
+    try {
+      pack = this.questionsService.findPackById(session.questionPackId);
+    } catch {
+      return;
+    }
+
+    const question = pack.questions.find((q) => q.id === round.questionId);
+    if (!question) return;
+
+    // Always emit question:started so the client has activeQuestion in store
+    socket.emit('question:started', {
+      roundIndex: round.roundIndex,
+      totalRounds: pack.questions.length,
+      questionId: round.questionId,
+      prompt: question.prompt,
+      options: question.options,
+      deadlineAt: round.deadlineAt.toISOString(),
+    });
+
+    if (phase === SessionPhase.QUESTION_CLOSED) {
+      socket.emit('question:closed', {});
+      return;
+    }
+
+    if (phase === SessionPhase.ROUND_RESULT) {
+      const [players, answers] = await Promise.all([
+        this.playerRepo.findBy({ sessionId: session.id }),
+        this.answerRepo.findBy({ roundId: round.id }),
+      ]);
+
+      const answerMap = new Map(answers.map((a) => [a.playerId, a.scoreDelta]));
+      const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+
+      socket.emit('round:result', {
+        questionId: round.questionId,
+        correctAnswerIndex: question.correctAnswerIndex,
+        scores: players.map((p) => ({
+          playerId: p.id,
+          roundScore: answerMap.get(p.id) ?? 0,
+          totalScore: p.score,
+        })),
+        leaderboard: sortedPlayers.map((p) => ({
+          playerId: p.id,
+          name: p.name,
+          score: p.score,
+        })),
+      });
+    }
   }
 
   private error(code: RealtimeError['code'], message: string): RealtimeError {

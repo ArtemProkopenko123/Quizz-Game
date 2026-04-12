@@ -10,6 +10,7 @@ import type {
   AnswerAcceptedPayload,
   RoundResultPayload,
   GameResultPayload,
+  AllAnsweredPayload,
   PresenceChangedPayload,
 } from '@/types/session.types';
 
@@ -31,8 +32,10 @@ export function useSession() {
   const setAnswerAccepted = useSessionStore((s) => s.setAnswerAccepted);
   const setAnswerRejected = useSessionStore((s) => s.setAnswerRejected);
   const setCountdownDeadline = useSessionStore((s) => s.setCountdownDeadline);
+  const updateQuestionDeadline = useSessionStore((s) => s.updateQuestionDeadline);
   const setLastRoundResult = useSessionStore((s) => s.setLastRoundResult);
   const setGameResult = useSessionStore((s) => s.setGameResult);
+  const setPhase = useSessionStore((s) => s.setPhase);
 
   // ── emit helpers ───────────────────────────────────────────────
 
@@ -94,11 +97,11 @@ export function useSession() {
     // ── Server → Client events ─────────────────────────────────
 
     function onSessionSnapshot(payload: SessionSnapshot) {
-      setSnapshot(payload);
+      setSnapshot({ ...payload, selfPlayerId: creds.playerId });
     }
 
     function onLobbyUpdated(payload: SessionSnapshot) {
-      setSnapshot(payload);
+      setSnapshot({ ...payload, selfPlayerId: creds.playerId });
     }
 
     function onPresenceChanged(payload: PresenceChangedPayload) {
@@ -106,15 +109,22 @@ export function useSession() {
     }
 
     function onCountdownStarted(payload: CountdownStartedPayload) {
+      setPhase('countdown');
       setCountdownDeadline(payload.deadlineAt);
     }
 
     function onQuestionStarted(payload: QuestionStartedPayload) {
+      setPhase('question_open');
       setActiveQuestion(payload);
     }
 
     function onQuestionClosed() {
+      setPhase('question_closed');
       clearActiveQuestion();
+    }
+
+    function onAllAnswered(payload: AllAnsweredPayload) {
+      updateQuestionDeadline(payload.newDeadlineAt);
     }
 
     function onAnswerAccepted(payload: AnswerAcceptedPayload) {
@@ -126,10 +136,12 @@ export function useSession() {
     }
 
     function onRoundResult(payload: RoundResultPayload) {
+      setPhase('round_result');
       setLastRoundResult(payload);
     }
 
     function onGameResult(payload: GameResultPayload) {
+      setPhase('game_result');
       setGameResult(payload);
     }
 
@@ -141,6 +153,7 @@ export function useSession() {
     socket.on('game:countdown_started', onCountdownStarted);
     socket.on('question:started', onQuestionStarted);
     socket.on('question:closed', onQuestionClosed);
+    socket.on('round:all_answered', onAllAnswered);
     socket.on('answer:accepted', onAnswerAccepted);
     socket.on('answer:rejected', onAnswerRejected);
     socket.on('round:result', onRoundResult);
@@ -157,6 +170,7 @@ export function useSession() {
       socket.off('game:countdown_started', onCountdownStarted);
       socket.off('question:started', onQuestionStarted);
       socket.off('question:closed', onQuestionClosed);
+      socket.off('round:all_answered', onAllAnswered);
       socket.off('answer:accepted', onAnswerAccepted);
       socket.off('answer:rejected', onAnswerRejected);
       socket.off('round:result', onRoundResult);
@@ -175,8 +189,10 @@ export function useSession() {
     clearActiveQuestion,
     setAnswerAccepted,
     setAnswerRejected,
+    updateQuestionDeadline,
     setLastRoundResult,
     setGameResult,
+    setPhase,
   ]);
 
   return { emitReady, emitStartGame, emitSubmitAnswer };

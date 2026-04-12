@@ -95,6 +95,10 @@ export interface GameResultPayload {
   leaderboard: GameResultEntry[];
 }
 
+export interface AllAnsweredPayload {
+  newDeadlineAt: string;
+}
+
 export interface PresenceChangedPayload {
   playerId: string;
   isConnected: boolean;

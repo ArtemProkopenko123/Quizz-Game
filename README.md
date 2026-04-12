@@ -1,5 +1,71 @@
 # Quizz Game MVP
 
+## Running Locally
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org) 20+
+- [Yarn](https://yarnpkg.com) 1.x (`npm install -g yarn`)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (for Postgres + Redis)
+
+### Quick start
+
+```bash
+yarn install:all   # install all dependencies (run once)
+yarn dev           # start Docker infra + backend + frontend together
+```
+
+`yarn dev` starts everything in one terminal — backend and frontend logs appear side by side with colour-coded prefixes.
+
+| URL | Service |
+|---|---|
+| `http://localhost:3000` | Frontend |
+| `http://localhost:3001/api` | Backend API |
+
+### Manual steps (alternative)
+
+<details>
+<summary>Expand</summary>
+
+**1. Start infrastructure**
+
+```bash
+docker compose up -d
+```
+
+**2. Start the backend**
+
+```bash
+cd backend && yarn start:dev
+```
+
+**3. Start the frontend** (new terminal)
+
+```bash
+cd frontend && yarn dev
+```
+
+</details>
+
+### Environment variables
+
+Both services ship with defaults that match the Docker Compose setup, so no `.env` edits are needed for local development.
+
+| File | Key variables |
+|---|---|
+| `backend/.env` | `DB_HOST`, `DB_PORT`, `REDIS_HOST`, `REDIS_PORT` |
+| `frontend/.env.local` | `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_WS_URL` |
+
+### Play a game locally
+
+1. Open `http://localhost:3000` — create a session, pick a name and color
+2. Copy the join code shown in the lobby
+3. Open a second browser tab or another device on the same network → join with the code
+4. Both players click **Ready**, then the host clicks **Start**
+5. Answer questions before the timer runs out — scores update after each round
+
+---
+
 ## Confirmed Stack
 
 The MVP stack is confirmed as:

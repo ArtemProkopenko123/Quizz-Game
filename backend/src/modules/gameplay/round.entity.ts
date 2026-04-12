@@ -3,12 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
-  OneToMany,
 } from 'typeorm';
-import { Session } from '../sessions/session.entity';
-import { Answer } from './answer.entity';
 
 @Entity('rounds')
 export class Round {
@@ -17,10 +12,6 @@ export class Round {
 
   @Column({ name: 'session_id' })
   sessionId!: string;
-
-  @ManyToOne(() => Session)
-  @JoinColumn({ name: 'session_id' })
-  session!: Session;
 
   @Column({ name: 'round_index' })
   roundIndex!: number;
@@ -33,9 +24,6 @@ export class Round {
 
   @Column({ name: 'is_closed', default: false })
   isClosed!: boolean;
-
-  @OneToMany(() => Answer, (answer) => answer.round)
-  answers!: Answer[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

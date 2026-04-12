@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useSessionStore } from '@/stores/session.store';
 
 const TOP3_STYLES = [
@@ -9,10 +10,17 @@ const TOP3_STYLES = [
 ] as const;
 
 export function GameResultView() {
+  const router     = useRouter();
+  const clear      = useSessionStore((s) => s.clear);
   const gameResult = useSessionStore((s) => s.gameResult);
   const snapshot   = useSessionStore((s) => s.snapshot);
 
   if (!gameResult) return null;
+
+  function handleBackToHome() {
+    clear();
+    router.push('/');
+  }
 
   const colorMap = new Map(snapshot?.players.map((p) => [p.playerId, p.color]) ?? []);
 
@@ -60,12 +68,12 @@ export function GameResultView() {
       </ol>
 
       <div className="mt-auto pb-4 text-center">
-        <a
-          href="/"
+        <button
+          onClick={handleBackToHome}
           className="inline-block rounded-xl bg-violet-600 px-6 py-3 text-sm font-semibold text-white transition-transform hover:bg-violet-700 active:scale-95"
         >
           Back to home
-        </a>
+        </button>
       </div>
     </div>
   );

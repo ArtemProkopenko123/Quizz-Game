@@ -1,26 +1,68 @@
 {
   "id": "mvp-general-knowledge",
-  "title": "MVP General Knowledge",
-  "version": 1,
-  "language": "en",
+  "title": "Общие знания",
+  "version": 2,
+  "language": "ru",
   "questions": [
     {
       "id": "q-001",
-      "prompt": "Which planet is known as the Red Planet?",
-      "options": ["Earth", "Mars", "Jupiter", "Venus"],
-      "correctAnswerIndex": 1
+      "prompt": "Какая планета является самой большой в Солнечной системе?",
+      "options": ["Сатурн", "Нептун", "Юпитер", "Уран"],
+      "correctAnswerIndex": 2
     },
     {
       "id": "q-002",
-      "prompt": "How many continents are there on Earth?",
-      "options": ["5", "6", "7", "8"],
-      "correctAnswerIndex": 2
+      "prompt": "В каком году Гагарин совершил первый полёт в космос?",
+      "options": ["1957", "1959", "1963", "1961"],
+      "correctAnswerIndex": 3
     },
     {
       "id": "q-003",
-      "prompt": "What gas do plants primarily absorb from the atmosphere?",
-      "options": ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
+      "prompt": "Сколько струн у классической гитары?",
+      "options": ["4", "5", "6", "7"],
       "correctAnswerIndex": 2
+    },
+    {
+      "id": "q-004",
+      "prompt": "Какой химический символ у золота?",
+      "options": ["Go", "Gl", "Gd", "Au"],
+      "correctAnswerIndex": 3
+    },
+    {
+      "id": "q-005",
+      "prompt": "Столица какой страны — Канберра?",
+      "options": ["Новая Зеландия", "Австралия", "Канада", "ЮАР"],
+      "correctAnswerIndex": 1
+    },
+    {
+      "id": "q-006",
+      "prompt": "Сколько цветов в радуге?",
+      "options": ["5", "6", "8", "7"],
+      "correctAnswerIndex": 3
+    },
+    {
+      "id": "q-007",
+      "prompt": "Кто написал роман «Преступление и наказание»?",
+      "options": ["Толстой", "Тургенев", "Достоевский", "Чехов"],
+      "correctAnswerIndex": 2
+    },
+    {
+      "id": "q-008",
+      "prompt": "Какой орган тела вырабатывает инсулин?",
+      "options": ["Печень", "Почки", "Поджелудочная железа", "Желудок"],
+      "correctAnswerIndex": 2
+    },
+    {
+      "id": "q-009",
+      "prompt": "Чему равна скорость света в вакууме (км/с)?",
+      "options": ["200 000", "299 792", "350 000", "150 000"],
+      "correctAnswerIndex": 1
+    },
+    {
+      "id": "q-010",
+      "prompt": "Какая страна является крупнейшей по площади?",
+      "options": ["Канада", "Китай", "США", "Россия"],
+      "correctAnswerIndex": 3
     }
   ]
 }

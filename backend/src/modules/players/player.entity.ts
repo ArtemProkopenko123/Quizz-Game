@@ -3,10 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-import { Session } from '../sessions/session.entity';
 
 @Entity('players')
 export class Player {
@@ -24,10 +21,6 @@ export class Player {
 
   @Column({ name: 'session_id' })
   sessionId!: string;
-
-  @ManyToOne(() => Session, (session) => session.players)
-  @JoinColumn({ name: 'session_id' })
-  session!: Session;
 
   @Column({ name: 'reconnect_token', unique: true })
   reconnectToken!: string;

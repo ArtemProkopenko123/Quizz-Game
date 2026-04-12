@@ -2,8 +2,6 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { api } from '@/lib/api';
 import { useSessionStore } from '@/stores/session.store';
 
@@ -16,6 +14,54 @@ const COLORS = [
 
 const DEFAULT_PACK_ID = 'mvp-general-knowledge';
 
+/* ── Dark-themed input ─────────────────────────────────────── */
+function DarkInput({
+  label,
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-semibold uppercase tracking-widest text-white/40">
+        {label}
+      </label>
+      <input
+        className="h-12 w-full rounded-xl border border-white/10 bg-white/8 px-4 text-base font-medium text-white placeholder:text-white/25 outline-none transition focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20"
+        {...props}
+      />
+    </div>
+  );
+}
+
+/* ── Dark-themed button ────────────────────────────────────── */
+interface BtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'ghost';
+  loading?: boolean;
+}
+function DarkButton({ variant = 'primary', loading, className = '', children, disabled, ...props }: BtnProps) {
+  const base =
+    'inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl text-base font-bold transition-all duration-150 focus-visible:outline-2 focus-visible:outline-violet-400 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
+  const variants = {
+    primary:
+      'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-900/40 hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.97]',
+    ghost:
+      'bg-white/8 text-white/70 ring-1 ring-white/12 hover:bg-white/14 hover:text-white active:scale-[0.97]',
+  };
+  return (
+    <button className={`${base} ${variants[variant]} ${className}`} disabled={disabled ?? loading} {...props}>
+      {loading ? (
+        <>
+          <svg className="size-4 animate-spin" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+          </svg>
+          {children}
+        </>
+      ) : children}
+    </button>
+  );
+}
+
+/* ── Main form ─────────────────────────────────────────────── */
 export function HomeForm() {
   const router = useRouter();
   const setCredentials = useSessionStore((s) => s.setCredentials);
@@ -32,7 +78,6 @@ export function HomeForm() {
   function handleCreate() {
     if (!canSubmit) return;
     setError('');
-
     startTransition(async () => {
       try {
         const creds = await api.createSession({
@@ -51,7 +96,6 @@ export function HomeForm() {
   function handleJoin() {
     if (!canSubmit) return;
     setError('');
-
     startTransition(async () => {
       try {
         const creds = await api.joinSession(joinCode.trim().toUpperCase(), {
@@ -66,29 +110,28 @@ export function HomeForm() {
     });
   }
 
+  /* ── Pick mode ── */
   if (mode === 'pick') {
     return (
-      <div className="space-y-4">
-        <Button className="w-full" size="lg" onClick={() => setMode('create')}>
-          Create game
-        </Button>
-        <Button className="w-full" size="lg" variant="secondary" onClick={() => setMode('join')}>
-          Join game
-        </Button>
+      <div className="space-y-3">
+        <DarkButton onClick={() => setMode('create')}>
+          <span className="text-lg">🎮</span> Create game
+        </DarkButton>
+        <DarkButton variant="ghost" onClick={() => setMode('join')}>
+          <span className="text-lg">🔗</span> Join game
+        </DarkButton>
       </div>
     );
   }
 
+  /* ── Create / Join form ── */
   return (
     <form
       className="space-y-5"
-      onSubmit={(e) => {
-        e.preventDefault();
-        mode === 'create' ? handleCreate() : handleJoin();
-      }}
+      onSubmit={(e) => { e.preventDefault(); mode === 'create' ? handleCreate() : handleJoin(); }}
     >
       {mode === 'join' && (
-        <Input
+        <DarkInput
           label="Game code"
           placeholder="ABC123"
           value={joinCode}
@@ -98,7 +141,7 @@ export function HomeForm() {
         />
       )}
 
-      <Input
+      <DarkInput
         label="Your name"
         placeholder="Enter your name"
         value={name}
@@ -107,42 +150,53 @@ export function HomeForm() {
         autoFocus={mode === 'create'}
       />
 
-      <div className="space-y-1.5">
-        <p className="text-sm font-medium text-zinc-700">Color</p>
-        <div className="flex gap-2">
+      {/* Color picker */}
+      <div className="space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Color</p>
+        <div className="flex gap-2.5">
           {COLORS.map((c) => (
             <button
               key={c}
               type="button"
               onClick={() => setColor(c)}
-              className="size-8 rounded-full transition-transform hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-500"
-              style={{ backgroundColor: c, outline: color === c ? `3px solid ${c}` : undefined, outlineOffset: color === c ? '2px' : undefined }}
+              className="relative size-8 rounded-full transition-transform duration-150 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+              style={{ backgroundColor: c }}
               aria-label={`Color ${c}`}
-            />
+            >
+              {color === c && (
+                <span
+                  className="absolute inset-0 rounded-full ring-2 ring-offset-2 ring-offset-slate-900"
+                  style={{ '--tw-ring-color': c } as React.CSSProperties}
+                />
+              )}
+            </button>
           ))}
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && (
+        <p className="rounded-lg bg-red-500/15 px-3 py-2 text-sm font-medium text-red-400">
+          {error}
+        </p>
+      )}
 
       <div className="flex gap-3 pt-1">
-        <Button
+        <button
           type="button"
-          variant="ghost"
-          className="flex-1"
           onClick={() => setMode('pick')}
           disabled={isPending}
+          className="h-12 flex-1 rounded-xl text-sm font-semibold text-white/50 transition hover:text-white/80 disabled:opacity-50 cursor-pointer"
         >
-          Back
-        </Button>
-        <Button
+          ← Back
+        </button>
+        <DarkButton
           type="submit"
-          className="flex-1"
+          className="flex-[2]"
           loading={isPending}
           disabled={!canSubmit}
         >
-          {mode === 'create' ? 'Create' : 'Join'}
-        </Button>
+          {mode === 'create' ? 'Create game' : 'Join game'}
+        </DarkButton>
       </div>
     </form>
   );

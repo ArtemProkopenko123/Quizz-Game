@@ -5,7 +5,6 @@ import { useSession } from '@/hooks/useSession';
 import { LobbyView } from './phases/LobbyView';
 import { CountdownView } from './phases/CountdownView';
 import { QuestionView } from './phases/QuestionView';
-import { RoundResultView } from './phases/RoundResultView';
 import { GameResultView } from './phases/GameResultView';
 import type { SessionPhase } from '@/types/session.types';
 
@@ -52,11 +51,9 @@ function PhaseRouter({ phase, emitReady, emitStartGame, emitSubmitAnswer }: Phas
     case 'countdown':
       return <CountdownView />;
     case 'question_open':
-      return <QuestionView emitSubmitAnswer={emitSubmitAnswer} />;
     case 'question_closed':
-      return <Placeholder label="Waiting for results..." />;
     case 'round_result':
-      return <RoundResultView />;
+      return <QuestionView emitSubmitAnswer={emitSubmitAnswer} />;
     case 'game_result':
       return <GameResultView />;
     case 'terminated':

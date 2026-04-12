@@ -3,10 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-import { Round } from './round.entity';
 
 @Entity('answers')
 export class Answer {
@@ -15,10 +12,6 @@ export class Answer {
 
   @Column({ name: 'round_id' })
   roundId!: string;
-
-  @ManyToOne(() => Round, (round) => round.answers)
-  @JoinColumn({ name: 'round_id' })
-  round!: Round;
 
   @Column({ name: 'player_id' })
   playerId!: string;

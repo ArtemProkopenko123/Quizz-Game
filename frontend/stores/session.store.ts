@@ -41,8 +41,10 @@ interface SessionStore {
   clearActiveQuestion: () => void;
   setAnswerAccepted: (scoreDelta: number) => void;
   setAnswerRejected: () => void;
+  updateQuestionDeadline: (deadlineAt: string) => void;
   setLastRoundResult: (result: RoundResultPayload) => void;
   setGameResult: (result: GameResultPayload) => void;
+  setPhase: (phase: SessionSnapshot['phase']) => void;
   clear: () => void;
 }
 
@@ -96,10 +98,36 @@ export const useSessionStore = create<SessionStore>()(
       setAnswerRejected: () =>
         set({ answerStatus: 'rejected' }),
 
+      updateQuestionDeadline: (deadlineAt) =>
+        set((state) =>
+          state.activeQuestion
+            ? { activeQuestion: { ...state.activeQuestion, deadlineAt } }
+            : {},
+        ),
+
       setLastRoundResult: (lastRoundResult) =>
-        set({ lastRoundResult, activeQuestion: null }),
+        set((state) => {
+          const scoreMap = new Map(
+            lastRoundResult.scores.map((s) => [s.playerId, s.totalScore]),
+          );
+          const updatedSnapshot = state.snapshot
+            ? {
+                ...state.snapshot,
+                players: state.snapshot.players.map((p) => ({
+                  ...p,
+                  score: scoreMap.get(p.playerId) ?? p.score,
+                })),
+              }
+            : null;
+          return { lastRoundResult, snapshot: updatedSnapshot };
+        }),
 
       setGameResult: (gameResult) => set({ gameResult }),
+
+      setPhase: (phase) =>
+        set((state) =>
+          state.snapshot ? { snapshot: { ...state.snapshot, phase } } : {},
+        ),
 
       clear: () => set({ credentials: null, ...initialState }),
     }),

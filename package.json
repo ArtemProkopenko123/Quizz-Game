@@ -1,0 +1,18 @@
+{
+  "name": "quizz-game",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "yarn install",
+    "infra": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "dev": "yarn infra && concurrently --names \"backend,frontend\" --prefix-colors \"cyan,magenta\" \"NODE_OPTIONS='--max-old-space-size=512' yarn workspace backend start:dev -- --builder swc\" \"NODE_OPTIONS='--max-old-space-size=512' yarn workspace frontend dev\"",
+    "build": "yarn workspace backend build && yarn workspace frontend build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

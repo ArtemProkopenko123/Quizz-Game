@@ -1,9 +1,7 @@
-version: '3.9'
-
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: quizz-postgres
+    container_name: quizz-game-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: quizz
@@ -13,15 +11,18 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    mem_limit: 256m
 
   redis:
     image: redis:7-alpine
-    container_name: quizz-redis
+    container_name: quizz-game-redis
     restart: unless-stopped
+    command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
     ports:
       - '6379:6379'
     volumes:
       - redis_data:/data
+    mem_limit: 96m
 
 volumes:
   postgres_data:
