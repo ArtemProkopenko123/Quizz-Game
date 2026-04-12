@@ -11,6 +11,8 @@ export const REDIS_CLIENT = 'REDIS_CLIENT';
       provide: REDIS_CLIENT,
       inject: [ConfigService],
       useFactory: (config: ConfigService): Redis => {
+        const url = process.env['REDIS_URL'];
+        if (url) return new Redis(url, { tls: { rejectUnauthorized: false } });
         const password = config.get<string>('redis.password');
         return new Redis({
           host: config.get<string>('redis.host'),

@@ -19,17 +19,25 @@ import { GameplayModule } from './modules/gameplay/gameplay.module';
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        host: config.get<string>('database.host'),
-        port: config.get<number>('database.port'),
-        database: config.get<string>('database.name'),
-        username: config.get<string>('database.user'),
-        password: config.get<string>('database.password'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true, // auto-creates tables; replace with migrations post-MVP
-        logging: config.get<string>('app.env') === 'development',
-      }),
+      useFactory: (config: ConfigService) => {
+        const url = process.env['DATABASE_URL'];
+        const base = {
+          type: 'postgres' as const,
+          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          synchronize: true, // auto-creates tables; replace with migrations post-MVP
+          logging: config.get<string>('app.env') === 'development',
+          ssl: url ? { rejectUnauthorized: false } : undefined,
+        };
+        if (url) return { ...base, url };
+        return {
+          ...base,
+          host:     config.get<string>('database.host'),
+          port:     config.get<number>('database.port'),
+          database: config.get<string>('database.name'),
+          username: config.get<string>('database.user'),
+          password: config.get<string>('database.password'),
+        };
+      },
     }),
     RedisModule,
     SessionsModule,
