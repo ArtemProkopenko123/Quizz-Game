@@ -141,7 +141,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
           value={joinCode}
           onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
           maxLength={8}
-          autoFocus
+          autoFocus={!initialCode}
         />
       )}
 
