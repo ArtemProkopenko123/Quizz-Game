@@ -154,9 +154,11 @@ function PlayerCard({ player, isHost, isSelf }: { player: PlayerSnapshot; isHost
     >
       {/* Avatar */}
       <span
-        className="size-10 shrink-0 rounded-full ring-2 ring-white/15"
+        className="flex size-10 shrink-0 items-center justify-center rounded-full text-xl ring-2 ring-white/15"
         style={{ backgroundColor: player.color }}
-      />
+      >
+        {player.avatarUrl ?? '👤'}
+      </span>
 
       {/* Name + badges */}
       <div className="flex min-w-0 flex-1 flex-col gap-1">

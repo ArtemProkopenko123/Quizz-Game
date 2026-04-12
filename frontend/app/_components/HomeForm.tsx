@@ -12,6 +12,13 @@ const COLORS = [
   '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899',
 ];
 
+const AVATARS = [
+  '👤', '🐶', '🐱', '🐭', '🐹',
+  '🐰', '🦊', '🐻', '🐼', '🐨',
+  '🐯', '🦁', '🐮', '🐸', '🐙',
+  '🦋', '🐧', '🦄',
+];
+
 const DEFAULT_PACK_ID = 'mvp-general-knowledge';
 
 /* ── Dark-themed input ─────────────────────────────────────── */
@@ -73,6 +80,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
   const [mode, setMode] = useState<Mode>(initialCode ? 'join' : 'pick');
   const [name, setName] = useState('');
   const [color, setColor] = useState(COLORS[0] ?? '#ef4444');
+  const [avatar, setAvatar] = useState(AVATARS[0] ?? '👤');
   const [joinCode, setJoinCode] = useState(initialCode ?? '');
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
@@ -87,6 +95,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
         const creds = await api.createSession({
           hostName: name.trim(),
           hostColor: color,
+          hostAvatarUrl: avatar,
           questionPackId: DEFAULT_PACK_ID,
         });
         setCredentials(creds);
@@ -105,6 +114,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
         const creds = await api.joinSession(joinCode.trim().toUpperCase(), {
           playerName: name.trim(),
           playerColor: color,
+          playerAvatarUrl: avatar,
         });
         setCredentials(creds);
         router.push(`/session/${creds.code}`);
@@ -173,6 +183,28 @@ export function HomeForm({ initialCode }: HomeFormProps) {
                   style={{ '--tw-ring-color': c } as React.CSSProperties}
                 />
               )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Avatar picker */}
+      <div className="space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Аватар</p>
+        <div className="grid grid-cols-6 gap-1.5">
+          {AVATARS.map((a) => (
+            <button
+              key={a}
+              type="button"
+              onClick={() => setAvatar(a)}
+              className={`flex h-10 items-center justify-center rounded-xl text-xl transition-all duration-150 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400 ${
+                avatar === a
+                  ? 'ring-2 ring-violet-500 bg-violet-500/20'
+                  : 'bg-white/6 hover:bg-white/12'
+              }`}
+              aria-label={`Аватар ${a}`}
+            >
+              {a}
             </button>
           ))}
         </div>

@@ -18,12 +18,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export interface CreateSessionPayload {
   hostName: string;
   hostColor: string;
+  hostAvatarUrl?: string;
   questionPackId: string;
 }
 
 export interface JoinSessionPayload {
   playerName: string;
   playerColor: string;
+  playerAvatarUrl?: string;
 }
 
 export const api = {

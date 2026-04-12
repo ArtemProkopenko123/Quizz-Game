@@ -50,7 +50,7 @@ export class SessionsService {
       color: dto.hostColor,
       sessionId: session.id,
       reconnectToken: randomUUID(),
-      avatarUrl: null,
+      avatarUrl: dto.hostAvatarUrl ?? null,
     });
     await this.playerRepo.save(player);
 
@@ -81,7 +81,7 @@ export class SessionsService {
       color: dto.playerColor,
       sessionId: session.id,
       reconnectToken: randomUUID(),
-      avatarUrl: null,
+      avatarUrl: dto.playerAvatarUrl ?? null,
     });
     await this.playerRepo.save(player);
 

@@ -1,4 +1,4 @@
-import { IsString, Length, Matches } from 'class-validator';
+import { IsOptional, IsString, Length, Matches } from 'class-validator';
 
 export class JoinSessionDto {
   @IsString()
@@ -8,4 +8,8 @@ export class JoinSessionDto {
   @IsString()
   @Matches(/^#[0-9A-Fa-f]{6}$/, { message: 'color must be a valid hex color' })
   playerColor!: string;
+
+  @IsOptional()
+  @IsString()
+  playerAvatarUrl?: string;
 }

@@ -98,7 +98,7 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
     ? (lastRoundResult?.scores ?? [])
         .map((s) => {
           const p = snapshotPlayers.find((p) => p.playerId === s.playerId);
-          return { playerId: s.playerId, name: p?.name ?? '?', color: p?.color ?? '#999', score: s.totalScore, roundScore: s.roundScore };
+          return { playerId: s.playerId, name: p?.name ?? '?', color: p?.color ?? '#999', avatarUrl: p?.avatarUrl ?? null, score: s.totalScore, roundScore: s.roundScore };
         })
         .sort((a, b) => b.score - a.score)
     : [...snapshotPlayers].sort((a, b) => b.score - a.score);
@@ -228,9 +228,11 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
               >
                 <span className="w-4 text-center text-xs font-bold text-white/25">{rank + 1}</span>
                 <div
-                  className="size-7 shrink-0 rounded-full ring-2 ring-white/15"
+                  className="flex size-7 shrink-0 items-center justify-center rounded-full text-sm ring-2 ring-white/15"
                   style={{ backgroundColor: player.color }}
-                />
+                >
+                  {player.avatarUrl ?? '👤'}
+                </div>
                 <span className="flex-1 truncate text-sm font-semibold text-white/80">{player.name}</span>
                 {delta !== null && (
                   delta > 0
