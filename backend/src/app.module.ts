@@ -27,7 +27,7 @@ import { GameplayModule } from './modules/gameplay/gameplay.module';
         username: config.get<string>('database.user'),
         password: config.get<string>('database.password'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: config.get<string>('app.env') === 'development',
+        synchronize: true, // auto-creates tables; replace with migrations post-MVP
         logging: config.get<string>('app.env') === 'development',
       }),
     }),

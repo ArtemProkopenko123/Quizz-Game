@@ -10,6 +10,7 @@ COPY backend/package.json ./backend/
 RUN corepack enable && yarn install --frozen-lockfile
 
 COPY backend ./backend
+COPY data ./data
 RUN yarn workspace backend build
 
 ENV NODE_ENV=production
