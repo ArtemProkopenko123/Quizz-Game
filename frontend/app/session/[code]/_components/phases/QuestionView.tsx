@@ -155,9 +155,9 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
             const isWrong    = showResult && isSelected && !isCorrect;
             const isDimmed   = showResult && !isCorrect && !isWrong;
 
-            let background: string = cfg.idleBg;
+            let background  = cfg.idleBg;
             let boxShadow: string | undefined;
-            let borderColor: string = 'rgba(255,255,255,0.08)';
+            let borderColor = 'rgba(255,255,255,0.08)';
             let extraCls    = '';
 
             if (showResult) {
