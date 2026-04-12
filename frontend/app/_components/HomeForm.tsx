@@ -151,7 +151,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
         value={name}
         onChange={(e) => setName(e.target.value)}
         maxLength={64}
-        autoFocus={mode === 'create'}
+        autoFocus={mode === 'create' || !!initialCode}
       />
 
       {/* Color picker */}
