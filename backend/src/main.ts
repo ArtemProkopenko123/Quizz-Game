@@ -6,8 +6,12 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const isProd = process.env['NODE_ENV'] === 'production';
   app.enableCors({
-    origin: process.env['FRONTEND_URL'] ?? 'http://localhost:3000',
+    // In dev, allow any origin (e.g. http://192.168.x.x:3000 from a phone on LAN).
+    origin: isProd
+      ? (process.env['FRONTEND_URL'] ?? 'http://localhost:3000')
+      : true,
     credentials: true,
   });
 
