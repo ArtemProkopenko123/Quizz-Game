@@ -3,7 +3,8 @@ import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 import { QuestionPack } from './question-pack.types';
 
-const PACKS_DIR = join(process.cwd(), 'data', 'question-packs');
+// __dirname resolves correctly in both local dev (src/) and Docker (dist/)
+const PACKS_DIR = join(__dirname, '..', '..', '..', 'data', 'question-packs');
 
 @Injectable()
 export class QuestionsService implements OnModuleInit {
