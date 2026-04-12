@@ -13,8 +13,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable} h-full`}>
-      <body className="min-h-full bg-zinc-50 font-sans antialiased">{children}</body>
+    <html lang="en" className={`${geist.variable} h-dvh`}>
+      <body className="h-full bg-zinc-50 font-sans antialiased">{children}</body>
     </html>
   );
 }

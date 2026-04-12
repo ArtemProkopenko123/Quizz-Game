@@ -1,6 +1,6 @@
 export default function SessionLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-slate-950">
+    <div className="relative flex h-full flex-col overflow-hidden bg-slate-950">
       {/* Ambient orbs — fixed so they don't scroll */}
       <div
         aria-hidden
@@ -13,7 +13,7 @@ export default function SessionLayout({ children }: { children: React.ReactNode 
       />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-1 flex-col">
+      <div className="relative z-10 flex flex-1 flex-col overflow-y-auto">
         {children}
       </div>
     </div>

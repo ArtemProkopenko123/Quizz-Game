@@ -2,7 +2,7 @@ import { HomeForm } from './_components/HomeForm';
 
 export default function HomePage() {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-slate-950 p-6">
+    <main className="relative flex h-full flex-col items-center justify-center overflow-hidden bg-slate-950 p-6">
 
       {/* Decorative background orbs */}
       <div
