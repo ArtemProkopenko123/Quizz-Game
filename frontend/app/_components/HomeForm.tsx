@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { api } from '@/lib/api';
+import { api, type PackInfo } from '@/lib/api';
 import { useSessionStore } from '@/stores/session.store';
 
 type Mode = 'pick' | 'create' | 'join';

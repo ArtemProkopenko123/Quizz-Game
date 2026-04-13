@@ -26,7 +26,7 @@ export interface CreateSessionPayload {
   hostName: string;
   hostColor: string;
   hostAvatarUrl?: string;
-  questionPackId: string;
+  questionPackId?: string;
 }
 
 export interface JoinSessionPayload {

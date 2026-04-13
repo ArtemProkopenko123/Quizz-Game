@@ -188,7 +188,7 @@ export class RealtimeGateway implements OnGatewayDisconnect {
 
     let pack: ReturnType<QuestionsService['findPackById']>;
     try {
-      pack = this.questionsService.findPackById(session.questionPackId);
+      pack = this.questionsService.findPackById(session.questionPackId!);
     } catch {
       return;
     }
