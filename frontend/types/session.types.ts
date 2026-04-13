@@ -1,5 +1,6 @@
 export const SESSION_PHASES = [
   'lobby',
+  'category_vote',
   'countdown',
   'question_open',
   'question_closed',
@@ -28,6 +29,19 @@ export interface RoundSnapshot {
   hasAnswered: boolean;
 }
 
+export interface SessionSettings {
+  roundCount: number;
+  questionsPerRound: number;
+  questionDuration: number;
+}
+
+export interface PackOption {
+  id: string;
+  title: string;
+  emoji: string;
+  questionCount: number;
+}
+
 export interface SessionSnapshot {
   sessionId: string;
   code: string;
@@ -36,6 +50,8 @@ export interface SessionSnapshot {
   selfPlayerId: string;
   players: PlayerSnapshot[];
   currentRound: RoundSnapshot | null;
+  settings: SessionSettings;
+  stageIndex: number;
 }
 
 /** Credentials returned by REST and persisted in sessionStorage */
@@ -102,4 +118,29 @@ export interface AllAnsweredPayload {
 export interface PresenceChangedPayload {
   playerId: string;
   isConnected: boolean;
+}
+
+export interface CategoryVoteStartedPayload {
+  deadlineAt: string;
+  availablePacks: PackOption[];
+  stageIndex: number;
+  totalStages: number;
+}
+
+export interface CategoryVoteUpdatedPayload {
+  /** playerId → packId */
+  votes: Record<string, string>;
+}
+
+export interface CategorySelectedPayload {
+  packId: string;
+  packTitle: string;
+  packEmoji: string;
+  countdownDeadlineAt: string;
+}
+
+export interface SessionSettingsUpdatedPayload extends SessionSettings {}
+
+export interface CategoryAllVotedPayload {
+  newDeadlineAt: string;
 }

@@ -12,6 +12,8 @@ import { GameplayService } from './gameplay.service';
 import { GameplayEmitterService } from './gameplay-emitter.service';
 import { GameStartDto } from './dto/game-start.dto';
 import { AnswerSubmitDto } from './dto/answer-submit.dto';
+import { CategoryVoteDto } from './dto/category-vote.dto';
+import { UpdateSettingsDto } from './dto/update-settings.dto';
 
 @WebSocketGateway({ cors: { origin: '*' } })
 export class GameplayGateway implements OnGatewayInit {
@@ -40,6 +42,46 @@ export class GameplayGateway implements OnGatewayInit {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Unknown error';
       this.logger.error(`game:start failed: ${message}`);
+      return { code: 'FORBIDDEN', message };
+    }
+  }
+
+  @SubscribeMessage('category:vote')
+  async handleCategoryVote(
+    @ConnectedSocket() _socket: Socket,
+    @MessageBody() payload: CategoryVoteDto,
+  ) {
+    try {
+      await this.gameplayService.submitCategoryVote(
+        payload.sessionId,
+        payload.playerId,
+        payload.packId,
+      );
+      return { ok: true };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      this.logger.error(`category:vote failed: ${message}`);
+      return { code: 'ERROR', message };
+    }
+  }
+
+  @SubscribeMessage('session:update_settings')
+  async handleUpdateSettings(
+    @ConnectedSocket() _socket: Socket,
+    @MessageBody() payload: UpdateSettingsDto,
+  ) {
+    try {
+      await this.gameplayService.updateSettings(
+        payload.sessionId,
+        payload.playerId,
+        payload.roundCount,
+        payload.questionsPerRound,
+        payload.questionDuration,
+      );
+      return { ok: true };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      this.logger.error(`session:update_settings failed: ${message}`);
       return { code: 'FORBIDDEN', message };
     }
   }

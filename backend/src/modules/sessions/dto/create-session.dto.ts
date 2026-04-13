@@ -13,7 +13,8 @@ export class CreateSessionDto {
   @IsString()
   hostAvatarUrl?: string;
 
+  @IsOptional()
   @IsString()
   @Length(1, 64)
-  questionPackId!: string;
+  questionPackId?: string;
 }

@@ -12,16 +12,13 @@ import type {
   GameResultPayload,
   AllAnsweredPayload,
   PresenceChangedPayload,
+  CategoryVoteStartedPayload,
+  CategoryVoteUpdatedPayload,
+  CategorySelectedPayload,
+  CategoryAllVotedPayload,
+  SessionSettingsUpdatedPayload,
 } from '@/types/session.types';
 
-/**
- * Manages the WebSocket lifecycle for a quiz session.
- *
- * - Connects on mount if credentials are present
- * - Emits `session:connect` with stored credentials
- * - Routes all server→client events into the Zustand store
- * - Disconnects on unmount
- */
 export function useSession() {
   const credentials = useSessionStore((s) => s.credentials);
   const setSnapshot = useSessionStore((s) => s.setSnapshot);
@@ -36,6 +33,11 @@ export function useSession() {
   const setLastRoundResult = useSessionStore((s) => s.setLastRoundResult);
   const setGameResult = useSessionStore((s) => s.setGameResult);
   const setPhase = useSessionStore((s) => s.setPhase);
+  const setCategoryVoteStarted = useSessionStore((s) => s.setCategoryVoteStarted);
+  const updateCategoryVotes = useSessionStore((s) => s.updateCategoryVotes);
+  const setCategorySelected = useSessionStore((s) => s.setCategorySelected);
+  const updateCategoryVoteDeadline = useSessionStore((s) => s.updateCategoryVoteDeadline);
+  const updateSessionSettings = useSessionStore((s) => s.updateSessionSettings);
 
   // ── emit helpers ───────────────────────────────────────────────
 
@@ -43,20 +45,14 @@ export function useSession() {
     (ready: boolean) => {
       if (!credentials) return;
       const event = ready ? 'player:ready' : 'player:not_ready';
-      getSocket().emit(event, {
-        sessionId: credentials.sessionId,
-        playerId: credentials.playerId,
-      });
+      getSocket().emit(event, { sessionId: credentials.sessionId, playerId: credentials.playerId });
     },
     [credentials],
   );
 
   const emitStartGame = useCallback(() => {
     if (!credentials) return;
-    getSocket().emit('game:start', {
-      sessionId: credentials.sessionId,
-      playerId: credentials.playerId,
-    });
+    getSocket().emit('game:start', { sessionId: credentials.sessionId, playerId: credentials.playerId });
   }, [credentials]);
 
   const emitSubmitAnswer = useCallback(
@@ -72,12 +68,35 @@ export function useSession() {
     [credentials],
   );
 
+  const emitCategoryVote = useCallback(
+    (packId: string) => {
+      if (!credentials) return;
+      getSocket().emit('category:vote', {
+        sessionId: credentials.sessionId,
+        playerId: credentials.playerId,
+        packId,
+      });
+    },
+    [credentials],
+  );
+
+  const emitUpdateSettings = useCallback(
+    (settings: Partial<{ roundCount: number; questionsPerRound: number; questionDuration: number }>) => {
+      if (!credentials) return;
+      getSocket().emit('session:update_settings', {
+        sessionId: credentials.sessionId,
+        playerId: credentials.playerId,
+        ...settings,
+      });
+    },
+    [credentials],
+  );
+
   // ── connection lifecycle ───────────────────────────────────────
 
   useEffect(() => {
     if (!credentials) return;
 
-    // Capture in closure so callbacks always have a non-null reference
     const creds = credentials;
     const socket = getSocket();
 
@@ -93,8 +112,6 @@ export function useSession() {
     function onDisconnect() {
       setSocketConnected(false);
     }
-
-    // ── Server → Client events ─────────────────────────────────
 
     function onSessionSnapshot(payload: SessionSnapshot) {
       setSnapshot({ ...payload, selfPlayerId: creds.playerId });
@@ -145,6 +162,27 @@ export function useSession() {
       setGameResult(payload);
     }
 
+    function onCategoryVoteStarted(payload: CategoryVoteStartedPayload) {
+      setCategoryVoteStarted(payload);
+    }
+
+    function onCategoryVoteUpdated(payload: CategoryVoteUpdatedPayload) {
+      updateCategoryVotes(payload);
+    }
+
+    function onCategorySelected(payload: CategorySelectedPayload) {
+      setCategorySelected(payload);
+      // Countdown starts right after — phase update comes with game:countdown_started
+    }
+
+    function onCategoryAllVoted(payload: CategoryAllVotedPayload) {
+      updateCategoryVoteDeadline(payload);
+    }
+
+    function onSessionSettingsUpdated(payload: SessionSettingsUpdatedPayload) {
+      updateSessionSettings(payload);
+    }
+
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on('session:snapshot', onSessionSnapshot);
@@ -158,6 +196,11 @@ export function useSession() {
     socket.on('answer:rejected', onAnswerRejected);
     socket.on('round:result', onRoundResult);
     socket.on('game:result', onGameResult);
+    socket.on('category:vote_started', onCategoryVoteStarted);
+    socket.on('category:vote_updated', onCategoryVoteUpdated);
+    socket.on('category:selected', onCategorySelected);
+    socket.on('category:all_voted', onCategoryAllVoted);
+    socket.on('session:settings_updated', onSessionSettingsUpdated);
 
     socket.connect();
 
@@ -175,6 +218,11 @@ export function useSession() {
       socket.off('answer:rejected', onAnswerRejected);
       socket.off('round:result', onRoundResult);
       socket.off('game:result', onGameResult);
+      socket.off('category:vote_started', onCategoryVoteStarted);
+      socket.off('category:vote_updated', onCategoryVoteUpdated);
+      socket.off('category:selected', onCategorySelected);
+      socket.off('category:all_voted', onCategoryAllVoted);
+      socket.off('session:settings_updated', onSessionSettingsUpdated);
 
       disconnectSocket();
       setSocketConnected(false);
@@ -193,7 +241,12 @@ export function useSession() {
     setLastRoundResult,
     setGameResult,
     setPhase,
+    setCategoryVoteStarted,
+    updateCategoryVotes,
+    setCategorySelected,
+    updateCategoryVoteDeadline,
+    updateSessionSettings,
   ]);
 
-  return { emitReady, emitStartGame, emitSubmitAnswer };
+  return { emitReady, emitStartGame, emitSubmitAnswer, emitCategoryVote, emitUpdateSettings };
 }

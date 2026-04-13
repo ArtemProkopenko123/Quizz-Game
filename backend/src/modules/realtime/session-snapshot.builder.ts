@@ -1,6 +1,6 @@
 import { Session } from '../sessions/session.entity';
 import { Player } from '../players/player.entity';
-import { SessionSnapshot, PlayerSnapshot } from './realtime.types';
+import { SessionSnapshot, PlayerSnapshot, SessionSettings } from './realtime.types';
 
 export function buildSessionSnapshot(
   session: Session,
@@ -17,6 +17,12 @@ export function buildSessionSnapshot(
     score: p.score,
   }));
 
+  const settings: SessionSettings = {
+    roundCount: session.roundCount,
+    questionsPerRound: session.questionsPerRound,
+    questionDuration: session.questionDuration,
+  };
+
   return {
     sessionId: session.id,
     code: session.code,
@@ -25,5 +31,7 @@ export function buildSessionSnapshot(
     selfPlayerId,
     players: playerSnapshots,
     currentRound: null, // populated by gameplay module when active
+    settings,
+    stageIndex: session.currentStageIndex,
   };
 }

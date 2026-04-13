@@ -4,9 +4,10 @@ import { Session } from './session.entity';
 import { Player } from '../players/player.entity';
 import { SessionsService } from './sessions.service';
 import { SessionsController } from './sessions.controller';
+import { QuestionsModule } from '../questions/questions.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Session, Player])],
+  imports: [TypeOrmModule.forFeature([Session, Player]), QuestionsModule],
   controllers: [SessionsController],
   providers: [SessionsService],
   exports: [SessionsService],

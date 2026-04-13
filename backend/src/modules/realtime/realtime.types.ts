@@ -25,6 +25,20 @@ export interface AnswerSubmitPayload {
   answerIndex: number;
 }
 
+export interface CategoryVotePayload {
+  sessionId: string;
+  playerId: string;
+  packId: string;
+}
+
+export interface UpdateSettingsPayload {
+  sessionId: string;
+  playerId: string;
+  roundCount?: number;
+  questionsPerRound?: number;
+  questionDuration?: number;
+}
+
 // ── Server → Client ──────────────────────────────────────────────
 
 export interface PlayerSnapshot {
@@ -45,6 +59,19 @@ export interface CurrentRoundSnapshot {
   hasAnswered: boolean;
 }
 
+export interface SessionSettings {
+  roundCount: number;
+  questionsPerRound: number;
+  questionDuration: number;
+}
+
+export interface PackOption {
+  id: string;
+  title: string;
+  emoji: string;
+  questionCount: number;
+}
+
 export interface SessionSnapshot {
   sessionId: string;
   code: string;
@@ -53,6 +80,9 @@ export interface SessionSnapshot {
   selfPlayerId: string;
   players: PlayerSnapshot[];
   currentRound: CurrentRoundSnapshot | null;
+  settings: SessionSettings;
+  /** Current stage progress, present during CATEGORY_VOTE and game phases */
+  stageIndex: number;
 }
 
 export interface RealtimeError {
@@ -69,3 +99,27 @@ export interface RealtimeError {
     | 'VALIDATION_ERROR';
   message: string;
 }
+
+// ── New event payloads ───────────────────────────────────────────
+
+export interface CategoryVoteStartedPayload {
+  deadlineAt: string;
+  availablePacks: PackOption[];
+  stageIndex: number;
+  totalStages: number;
+}
+
+export interface CategoryVoteUpdatedPayload {
+  /** playerId → packId */
+  votes: Record<string, string>;
+}
+
+export interface CategorySelectedPayload {
+  packId: string;
+  packTitle: string;
+  packEmoji: string;
+  /** When the game countdown will start */
+  countdownDeadlineAt: string;
+}
+
+export interface SessionSettingsUpdatedPayload extends SessionSettings {}

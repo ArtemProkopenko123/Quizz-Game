@@ -6,14 +6,15 @@ import { LobbyView } from './phases/LobbyView';
 import { CountdownView } from './phases/CountdownView';
 import { QuestionView } from './phases/QuestionView';
 import { GameResultView } from './phases/GameResultView';
-import type { SessionPhase } from '@/types/session.types';
+import { CategoryVoteView } from './phases/CategoryVoteView';
+import type { SessionPhase, SessionSettings } from '@/types/session.types';
 
 interface Props {
   code: string;
 }
 
 export function SessionView({ code }: Props) {
-  const { emitReady, emitStartGame, emitSubmitAnswer } = useSession();
+  const { emitReady, emitStartGame, emitSubmitAnswer, emitCategoryVote, emitUpdateSettings } = useSession();
 
   const snapshot = useSessionStore((s) => s.snapshot);
   const isSocketConnected = useSessionStore((s) => s.isSocketConnected);
@@ -33,6 +34,8 @@ export function SessionView({ code }: Props) {
       emitReady={emitReady}
       emitStartGame={emitStartGame}
       emitSubmitAnswer={emitSubmitAnswer}
+      emitCategoryVote={emitCategoryVote}
+      emitUpdateSettings={emitUpdateSettings}
     />
   );
 }
@@ -42,12 +45,29 @@ interface PhaseRouterProps {
   emitReady: (ready: boolean) => void;
   emitStartGame: () => void;
   emitSubmitAnswer: (questionId: string, answerIndex: number) => void;
+  emitCategoryVote: (packId: string) => void;
+  emitUpdateSettings: (patch: Partial<SessionSettings>) => void;
 }
 
-function PhaseRouter({ phase, emitReady, emitStartGame, emitSubmitAnswer }: PhaseRouterProps) {
+function PhaseRouter({
+  phase,
+  emitReady,
+  emitStartGame,
+  emitSubmitAnswer,
+  emitCategoryVote,
+  emitUpdateSettings,
+}: PhaseRouterProps) {
   switch (phase) {
     case 'lobby':
-      return <LobbyView emitReady={emitReady} emitStartGame={emitStartGame} />;
+      return (
+        <LobbyView
+          emitReady={emitReady}
+          emitStartGame={emitStartGame}
+          emitUpdateSettings={emitUpdateSettings}
+        />
+      );
+    case 'category_vote':
+      return <CategoryVoteView emitCategoryVote={emitCategoryVote} />;
     case 'countdown':
       return <CountdownView />;
     case 'question_open':

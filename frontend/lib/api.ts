@@ -1,6 +1,13 @@
 import type { SessionCredentials } from '@/types/session.types';
 import { getApiBaseUrl } from '@/lib/public-origin';
 
+export interface PackInfo {
+  id: string;
+  title: string;
+  emoji: string;
+  questionCount: number;
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${getApiBaseUrl()}${path}`, {
     headers: { 'Content-Type': 'application/json', ...init?.headers },
@@ -29,6 +36,9 @@ export interface JoinSessionPayload {
 }
 
 export const api = {
+  listPacks: () =>
+    request<PackInfo[]>('/sessions/packs'),
+
   createSession: (body: CreateSessionPayload) =>
     request<SessionCredentials>('/sessions', {
       method: 'POST',

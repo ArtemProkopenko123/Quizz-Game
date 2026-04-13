@@ -34,10 +34,11 @@ export class QuestionsService implements OnModuleInit {
     return pack;
   }
 
-  listPacks(): Array<{ id: string; title: string; questionCount: number }> {
+  listPacks(): Array<{ id: string; title: string; emoji: string; questionCount: number }> {
     return Array.from(this.packs.values()).map((p) => ({
       id: p.id,
       title: p.title,
+      emoji: p.emoji ?? '❓',
       questionCount: p.questions.length,
     }));
   }

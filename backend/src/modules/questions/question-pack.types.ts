@@ -12,6 +12,7 @@ export interface Question {
 export interface QuestionPack {
   id: string;
   title: string;
+  emoji?: string;
   version: number;
   language: string;
   questions: Question[];

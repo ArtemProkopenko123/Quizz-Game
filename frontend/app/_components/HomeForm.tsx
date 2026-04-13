@@ -19,8 +19,6 @@ const AVATARS = [
   '🦋', '🐧', '🦄',
 ];
 
-const DEFAULT_PACK_ID = 'mvp-general-knowledge';
-
 /* ── Dark-themed input ─────────────────────────────────────── */
 function DarkInput({
   label,
@@ -85,6 +83,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
 
+
   const canSubmit = name.trim().length > 0 && (mode === 'create' || joinCode.trim().length > 0);
 
   function handleCreate() {
@@ -96,7 +95,6 @@ export function HomeForm({ initialCode }: HomeFormProps) {
           hostName: name.trim(),
           hostColor: color,
           hostAvatarUrl: avatar,
-          questionPackId: DEFAULT_PACK_ID,
         });
         setCredentials(creds);
         router.push(`/session/${creds.code}`);
@@ -166,7 +164,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
 
       {/* Color picker */}
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Color</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Цвет</p>
         <div className="flex gap-2.5">
           {COLORS.map((c) => (
             <button
@@ -175,7 +173,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
               onClick={() => setColor(c)}
               className="relative size-8 rounded-full transition-transform duration-150 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
               style={{ backgroundColor: c }}
-              aria-label={`Color ${c}`}
+              aria-label={`Цвет ${c}`}
             >
               {color === c && (
                 <span
@@ -210,6 +208,8 @@ export function HomeForm({ initialCode }: HomeFormProps) {
         </div>
       </div>
 
+
+
       {error && (
         <p className="rounded-lg bg-red-500/15 px-3 py-2 text-sm font-medium text-red-400">
           {error}
@@ -231,7 +231,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
           loading={isPending}
           disabled={!canSubmit}
         >
-          {mode === 'create' ? 'Create game' : 'Join game'}
+          {mode === 'create' ? 'Создать игру' : 'Войти в игру'}
         </DarkButton>
       </div>
     </form>

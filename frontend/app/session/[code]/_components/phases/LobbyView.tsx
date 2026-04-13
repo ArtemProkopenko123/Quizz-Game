@@ -2,22 +2,30 @@
 
 import { useState } from 'react';
 import { useSessionStore } from '@/stores/session.store';
-import type { PlayerSnapshot } from '@/types/session.types';
+import { SettingsModal } from '../SettingsModal';
+import type { PlayerSnapshot, SessionSettings } from '@/types/session.types';
 
 interface Props {
   emitReady: (ready: boolean) => void;
   emitStartGame: () => void;
+  emitUpdateSettings: (patch: Partial<SessionSettings>) => void;
 }
 
-export function LobbyView({ emitReady, emitStartGame }: Props) {
+export function LobbyView({ emitReady, emitStartGame, emitUpdateSettings }: Props) {
   const snapshot = useSessionStore((s) => s.snapshot)!;
-  const { players, hostPlayerId, selfPlayerId, code } = snapshot;
+  const { players, hostPlayerId, selfPlayerId, code, settings } = snapshot;
 
   const self    = players.find((p) => p.playerId === selfPlayerId);
   const isHost  = selfPlayerId === hostPlayerId;
   const isReady = self?.isReady ?? false;
 
   const readyCount = players.filter((p) => p.isReady).length;
+
+  const [showSettings, setShowSettings] = useState(false);
+
+  // Pack count for maxRounds in SettingsModal — we don't know it from the client
+  // without an API call, so we cap at 5 (current pack count)
+  const MAX_ROUNDS = 5;
 
   return (
     <div className="flex flex-1 flex-col">
@@ -30,11 +38,44 @@ export function LobbyView({ emitReady, emitStartGame }: Props) {
             {readyCount}/{players.length} готовы
           </p>
         </div>
+
         <div className="flex items-center gap-2">
+          {/* Settings gear — host only */}
+          {isHost && (
+            <button
+              onClick={() => setShowSettings(true)}
+              title="Настройки игры"
+              className="flex size-10 cursor-pointer items-center justify-center rounded-xl transition-all duration-150 active:scale-90"
+              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </button>
+          )}
+
           {isHost && <ShareIcon code={code} />}
           <CodeBadge code={code} />
         </div>
       </header>
+
+      {/* Settings badge — visible to all */}
+      <div className="flex justify-center gap-3 px-5 py-2.5">
+        {[
+          `${settings.roundCount} ${settings.roundCount === 1 ? 'этап' : settings.roundCount < 5 ? 'этапа' : 'этапов'}`,
+          `${settings.questionsPerRound} вопросов`,
+          `${settings.questionDuration}с`,
+        ].map((label) => (
+          <span
+            key={label}
+            className="rounded-lg px-2.5 py-1 text-xs font-semibold text-white/40"
+            style={{ background: 'rgba(255,255,255,0.06)' }}
+          >
+            {label}
+          </span>
+        ))}
+      </div>
 
       {/* Player list */}
       <ul className="flex flex-1 flex-col gap-2.5 overflow-y-auto p-4">
@@ -53,9 +94,7 @@ export function LobbyView({ emitReady, emitStartGame }: Props) {
         <button
           onClick={() => emitReady(!isReady)}
           className={`inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2 rounded-2xl text-base font-bold transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-violet-400 focus-visible:outline-offset-2 ${
-            isReady
-              ? 'text-white/60'
-              : 'text-white shadow-lg shadow-violet-900/40'
+            isReady ? 'text-white/60' : 'text-white shadow-lg shadow-violet-900/40'
           }`}
           style={{
             background: isReady
@@ -77,6 +116,16 @@ export function LobbyView({ emitReady, emitStartGame }: Props) {
           </button>
         )}
       </footer>
+
+      {/* Settings modal */}
+      {showSettings && (
+        <SettingsModal
+          settings={settings}
+          maxRounds={MAX_ROUNDS}
+          onSave={emitUpdateSettings}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
     </div>
   );
 }

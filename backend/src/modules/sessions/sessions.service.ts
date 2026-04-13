@@ -40,7 +40,7 @@ export class SessionsService {
     const session = this.sessionRepo.create({
       code,
       phase: SessionPhase.LOBBY,
-      questionPackId: dto.questionPackId,
+      questionPackId: dto.questionPackId ?? null,
       hostPlayerId: null,
     });
     await this.sessionRepo.save(session);

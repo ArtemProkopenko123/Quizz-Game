@@ -1,5 +1,6 @@
 export enum SessionPhase {
   LOBBY = 'lobby',
+  CATEGORY_VOTE = 'category_vote',
   COUNTDOWN = 'countdown',
   QUESTION_OPEN = 'question_open',
   QUESTION_CLOSED = 'question_closed',

@@ -3,10 +3,17 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import type {
   SessionCredentials,
   SessionSnapshot,
+  SessionSettings,
+  PackOption,
   QuestionStartedPayload,
   RoundResultPayload,
   GameResultPayload,
   PresenceChangedPayload,
+  CategoryVoteStartedPayload,
+  CategoryVoteUpdatedPayload,
+  CategorySelectedPayload,
+  SessionSettingsUpdatedPayload,
+  CategoryAllVotedPayload,
 } from '@/types/session.types';
 
 type AnswerStatus = 'idle' | 'accepted' | 'rejected';
@@ -31,6 +38,15 @@ interface SessionStore {
   lastRoundResult: RoundResultPayload | null;
   gameResult: GameResultPayload | null;
 
+  // Category vote state
+  categoryVoteDeadline: string | null;
+  categoryVotes: Record<string, string>; // playerId → packId
+  availablePacks: PackOption[];
+  categoryVoteStageIndex: number;
+  categoryVoteTotalStages: number;
+  /** Pack chosen by vote — shown during dramatic reveal then cleared */
+  categoryWinner: CategorySelectedPayload | null;
+
   // Actions
   setCredentials: (creds: SessionCredentials) => void;
   setSnapshot: (snapshot: SessionSnapshot) => void;
@@ -45,6 +61,11 @@ interface SessionStore {
   setLastRoundResult: (result: RoundResultPayload) => void;
   setGameResult: (result: GameResultPayload) => void;
   setPhase: (phase: SessionSnapshot['phase']) => void;
+  setCategoryVoteStarted: (payload: CategoryVoteStartedPayload) => void;
+  updateCategoryVotes: (payload: CategoryVoteUpdatedPayload) => void;
+  setCategorySelected: (payload: CategorySelectedPayload) => void;
+  updateCategoryVoteDeadline: (payload: CategoryAllVotedPayload) => void;
+  updateSessionSettings: (payload: SessionSettingsUpdatedPayload) => void;
   clear: () => void;
 }
 
@@ -57,6 +78,12 @@ const initialState = {
   answerScoreDelta: null,
   lastRoundResult: null,
   gameResult: null,
+  categoryVoteDeadline: null as string | null,
+  categoryVotes: {} as Record<string, string>,
+  availablePacks: [] as PackOption[],
+  categoryVoteStageIndex: 0,
+  categoryVoteTotalStages: 0,
+  categoryWinner: null as CategorySelectedPayload | null,
 };
 
 export const useSessionStore = create<SessionStore>()(
@@ -89,14 +116,12 @@ export const useSessionStore = create<SessionStore>()(
       setActiveQuestion: (activeQuestion) =>
         set({ activeQuestion, answerStatus: 'idle', answerScoreDelta: null }),
 
-      clearActiveQuestion: () =>
-        set({ activeQuestion: null }),
+      clearActiveQuestion: () => set({ activeQuestion: null }),
 
       setAnswerAccepted: (scoreDelta) =>
         set({ answerStatus: 'accepted', answerScoreDelta: scoreDelta }),
 
-      setAnswerRejected: () =>
-        set({ answerStatus: 'rejected' }),
+      setAnswerRejected: () => set({ answerStatus: 'rejected' }),
 
       updateQuestionDeadline: (deadlineAt) =>
         set((state) =>
@@ -129,12 +154,38 @@ export const useSessionStore = create<SessionStore>()(
           state.snapshot ? { snapshot: { ...state.snapshot, phase } } : {},
         ),
 
+      setCategoryVoteStarted: ({ deadlineAt, availablePacks, stageIndex, totalStages }) =>
+        set((state) => ({
+          categoryVoteDeadline: deadlineAt,
+          availablePacks,
+          categoryVotes: {},
+          categoryVoteStageIndex: stageIndex,
+          categoryVoteTotalStages: totalStages,
+          categoryWinner: null,
+          snapshot: state.snapshot ? { ...state.snapshot, phase: 'category_vote' } : null,
+        })),
+
+      updateCategoryVotes: ({ votes }) =>
+        set({ categoryVotes: votes }),
+
+      setCategorySelected: (payload) =>
+        set({ categoryWinner: payload }),
+
+      updateCategoryVoteDeadline: ({ newDeadlineAt }) =>
+        set({ categoryVoteDeadline: newDeadlineAt }),
+
+      updateSessionSettings: (settings: SessionSettingsUpdatedPayload) =>
+        set((state) => ({
+          snapshot: state.snapshot
+            ? { ...state.snapshot, settings: settings as SessionSettings }
+            : null,
+        })),
+
       clear: () => set({ credentials: null, ...initialState }),
     }),
     {
       name: 'quizz-session',
       storage: createJSONStorage(() => sessionStorage),
-      // Only credentials survive a refresh; live state is restored from WS
       partialize: (state) => ({ credentials: state.credentials }),
     },
   ),
