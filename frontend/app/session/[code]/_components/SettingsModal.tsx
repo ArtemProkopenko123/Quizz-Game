@@ -80,7 +80,7 @@ export function SettingsModal({ settings, maxRounds, onSave, onClose }: Props) {
       >
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-black text-white">Настройки игры</h2>
+          <h2 className="text-base font-black text-white">Game settings</h2>
           <button
             onClick={onClose}
             className="flex size-8 items-center justify-center rounded-xl text-white/40 transition hover:text-white cursor-pointer"
@@ -92,14 +92,14 @@ export function SettingsModal({ settings, maxRounds, onSave, onClose }: Props) {
         {/* Settings */}
         <div className="space-y-5">
           <Stepper
-            label="Этапов"
+            label="Rounds"
             value={roundCount}
             min={1}
             max={maxRounds}
             onChange={setRoundCount}
           />
           <Stepper
-            label="Вопросов за этап"
+            label="Questions per round"
             value={questionsPerRound}
             min={3}
             max={10}
@@ -108,7 +108,7 @@ export function SettingsModal({ settings, maxRounds, onSave, onClose }: Props) {
 
           {/* Duration toggle */}
           <div className="flex items-center justify-between gap-4">
-            <span className="text-sm font-semibold text-white/70">Время на вопрос</span>
+            <span className="text-sm font-semibold text-white/70">Time per question</span>
             <div className="flex gap-1.5">
               {DURATION_OPTIONS.map((d) => (
                 <button
@@ -121,7 +121,7 @@ export function SettingsModal({ settings, maxRounds, onSave, onClose }: Props) {
                       : 'bg-white/8 text-white/50 hover:bg-white/14'
                   }`}
                 >
-                  {d}с
+                  {d}s
                 </button>
               ))}
             </div>
@@ -130,7 +130,7 @@ export function SettingsModal({ settings, maxRounds, onSave, onClose }: Props) {
 
         {/* Info line */}
         <p className="text-xs text-white/25 text-center">
-          Всего вопросов: ~{roundCount * questionsPerRound}
+          Total questions: ~{roundCount * questionsPerRound}
         </p>
 
         {/* Save */}
@@ -138,7 +138,7 @@ export function SettingsModal({ settings, maxRounds, onSave, onClose }: Props) {
           onClick={handleSave}
           className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-base font-bold text-white shadow-lg shadow-violet-900/40 transition hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.97] cursor-pointer"
         >
-          Сохранить
+          Save
         </button>
       </div>
     </div>

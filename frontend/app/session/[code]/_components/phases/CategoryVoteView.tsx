@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useSessionStore } from '@/stores/session.store';
 import { useCountdown } from '@/hooks/useCountdown';
 import type { PackOption } from '@/types/session.types';
@@ -65,13 +66,25 @@ interface Props {
 }
 
 export function CategoryVoteView({ emitCategoryVote }: Props) {
-  const availablePacks = useSessionStore((s) => s.availablePacks);
-  const categoryVotes  = useSessionStore((s) => s.categoryVotes);
-  const categoryWinner = useSessionStore((s) => s.categoryWinner);
-  const voteDeadline   = useSessionStore((s) => s.categoryVoteDeadline);
-  const stageIndex     = useSessionStore((s) => s.categoryVoteStageIndex);
-  const totalStages    = useSessionStore((s) => s.categoryVoteTotalStages);
-  const snapshot       = useSessionStore((s) => s.snapshot);
+  const {
+    availablePacks,
+    categoryVotes,
+    categoryWinner,
+    voteDeadline,
+    stageIndex,
+    totalStages,
+    snapshot,
+  } = useSessionStore(
+    useShallow((s) => ({
+      availablePacks: s.availablePacks,
+      categoryVotes:  s.categoryVotes,
+      categoryWinner: s.categoryWinner,
+      voteDeadline:   s.categoryVoteDeadline,
+      stageIndex:     s.categoryVoteStageIndex,
+      totalStages:    s.categoryVoteTotalStages,
+      snapshot:       s.snapshot,
+    })),
+  );
 
   const [selectedPackId, setSelectedPackId] = useState<string | null>(null);
 
@@ -99,9 +112,9 @@ export function CategoryVoteView({ emitCategoryVote }: Props) {
       {/* Header */}
       <div className="flex flex-col items-center gap-1 animate-fade-up">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">
-          Этап {stageIndex + 1} из {totalStages}
+          Round {stageIndex + 1} of {totalStages}
         </p>
-        <p className="text-xl font-black text-white">Выберите категорию</p>
+        <p className="text-xl font-black text-white">Choose a category</p>
       </div>
 
       {/* Timer */}
@@ -115,7 +128,7 @@ export function CategoryVoteView({ emitCategoryVote }: Props) {
           <div className="flex flex-col items-center gap-1">
             <span className="text-4xl">{categoryWinner.packEmoji}</span>
             <span className="text-sm font-black text-white">{categoryWinner.packTitle}</span>
-            <span className="text-xs text-white/40">Голосование завершено</span>
+            <span className="text-xs text-white/40">Voting complete</span>
           </div>
         )}
       </div>
@@ -148,7 +161,7 @@ export function CategoryVoteView({ emitCategoryVote }: Props) {
       {/* Hint */}
       {!categoryWinner && !selectedPackId && (
         <p className="text-center text-xs text-white/25 animate-fade-up" style={{ animationDelay: '300ms' }}>
-          Не успеете — категория выбирается случайно
+          Too slow — category will be chosen randomly
         </p>
       )}
     </div>
@@ -229,7 +242,7 @@ function CategoryCard({ pack, cfg, voters, isSelected, isWinner, isLoser, animDe
         {/* Title */}
         <div>
           <p className="text-sm font-black text-white leading-tight">{pack.title}</p>
-          <p className="text-xs text-white/30 mt-0.5">{pack.questionCount} вопросов</p>
+          <p className="text-xs text-white/30 mt-0.5">{pack.questionCount} questions</p>
         </div>
 
         {/* Voter avatars */}
@@ -272,7 +285,7 @@ function CategoryCard({ pack, cfg, voters, isSelected, isWinner, isLoser, animDe
               color: isWinner ? '#6ee7b7' : isActive ? cfg.color : 'rgba(255,255,255,0.5)',
             }}
           >
-            {voters.length} {voters.length === 1 ? 'голос' : voters.length < 5 ? 'голоса' : 'голосов'}
+            {voters.length} {voters.length === 1 ? 'vote' : 'votes'}
           </span>
         )}
       </button>

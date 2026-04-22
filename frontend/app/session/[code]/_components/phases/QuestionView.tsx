@@ -110,7 +110,7 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
         {/* Round counter */}
         <header className="flex justify-center px-4 pt-5 pb-1 animate-fade-up">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/40">
-            Вопрос {roundIndex + 1} / {totalRounds}
+            Question {roundIndex + 1} / {totalRounds}
           </span>
         </header>
 
@@ -124,7 +124,7 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
           {showResult && (
             <div className="flex flex-col items-center gap-1">
               <span className="text-4xl">✅</span>
-              <span className="text-xs font-semibold uppercase tracking-widest text-white/40">Правильный ответ</span>
+              <span className="text-xs font-semibold uppercase tracking-widest text-white/40">Correct answer</span>
             </div>
           )}
         </div>
@@ -139,7 +139,7 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
         {/* Submitted hint */}
         {selectedIndex !== null && !showResult && (
           <p className="mb-1 text-center text-xs font-medium text-white/30">
-            Ответ принят · нажмите для смены
+            Answer submitted · tap to change
           </p>
         )}
 

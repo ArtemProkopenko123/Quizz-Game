@@ -33,9 +33,9 @@ export function LobbyView({ emitReady, emitStartGame, emitUpdateSettings }: Prop
       {/* Header */}
       <header className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">Лобби</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">Lobby</p>
           <p className="mt-0.5 text-sm font-semibold text-white/60">
-            {readyCount}/{players.length} готовы
+            {readyCount}/{players.length} ready
           </p>
         </div>
 
@@ -44,7 +44,7 @@ export function LobbyView({ emitReady, emitStartGame, emitUpdateSettings }: Prop
           {isHost && (
             <button
               onClick={() => setShowSettings(true)}
-              title="Настройки игры"
+              title="Game settings"
               className="flex size-10 cursor-pointer items-center justify-center rounded-xl transition-all duration-150 active:scale-90"
               style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
             >
@@ -63,9 +63,9 @@ export function LobbyView({ emitReady, emitStartGame, emitUpdateSettings }: Prop
       {/* Settings badge — visible to all */}
       <div className="flex justify-center gap-3 px-5 py-2.5">
         {[
-          `${settings.roundCount} ${settings.roundCount === 1 ? 'этап' : settings.roundCount < 5 ? 'этапа' : 'этапов'}`,
-          `${settings.questionsPerRound} вопросов`,
-          `${settings.questionDuration}с`,
+          `${settings.roundCount} ${settings.roundCount === 1 ? 'round' : 'rounds'}`,
+          `${settings.questionsPerRound} questions`,
+          `${settings.questionDuration}s`,
         ].map((label) => (
           <span
             key={label}
@@ -103,7 +103,7 @@ export function LobbyView({ emitReady, emitStartGame, emitUpdateSettings }: Prop
             border: isReady ? '1px solid rgba(255,255,255,0.1)' : 'none',
           }}
         >
-          {isReady ? '✓ Готов' : 'Готов!'}
+          {isReady ? '✓ Ready' : 'Ready!'}
         </button>
 
         {isHost && (
@@ -112,7 +112,7 @@ export function LobbyView({ emitReady, emitStartGame, emitUpdateSettings }: Prop
             className="inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2 rounded-2xl text-base font-bold text-white shadow-lg shadow-fuchsia-900/40 transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-violet-400 focus-visible:outline-offset-2"
             style={{ background: 'linear-gradient(135deg, #db2777, #9333ea)' }}
           >
-            🚀 Начать игру
+            🚀 Start game
           </button>
         )}
       </footer>
@@ -162,7 +162,7 @@ function ShareIcon({ code }: { code: string }) {
 
   async function handleShare() {
     const url = `${window.location.origin}/join/${code}`;
-    const shareData = { title: 'Присоединись к игре QUIZZ!', text: `Код: ${code}`, url };
+    const shareData = { title: 'Join the QUIZZ game!', text: `Code: ${code}`, url };
 
     if (navigator.share && navigator.canShare?.(shareData)) {
       await navigator.share(shareData);
@@ -176,7 +176,7 @@ function ShareIcon({ code }: { code: string }) {
   return (
     <button
       onClick={handleShare}
-      title="Поделиться ссылкой"
+      title="Share link"
       className="flex size-10 cursor-pointer items-center justify-center rounded-xl transition-all duration-150 active:scale-90"
       style={{ background: done ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.08)', border: `1px solid ${done ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.12)'}` }}
     >
@@ -213,17 +213,17 @@ function PlayerCard({ player, isHost, isSelf }: { player: PlayerSnapshot; isHost
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="truncate text-sm font-bold text-white">
           {player.name}
-          {isSelf && <span className="ml-1.5 text-xs font-normal text-white/35">(вы)</span>}
+          {isSelf && <span className="ml-1.5 text-xs font-normal text-white/35">(you)</span>}
         </span>
         <div className="flex items-center gap-1.5">
           {isHost && (
             <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-300" style={{ background: 'rgba(139,92,246,0.2)' }}>
-              Хост
+              Host
             </span>
           )}
           {player.isReady && (
             <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300" style={{ background: 'rgba(16,185,129,0.2)' }}>
-              Готов
+              Ready
             </span>
           )}
         </div>

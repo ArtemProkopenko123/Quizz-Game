@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { getSocket, disconnectSocket } from '@/lib/socket';
 import { useSessionStore } from '@/stores/session.store';
 import type {
@@ -20,24 +21,47 @@ import type {
 } from '@/types/session.types';
 
 export function useSession() {
-  const credentials = useSessionStore((s) => s.credentials);
-  const setSnapshot = useSessionStore((s) => s.setSnapshot);
-  const updatePresence = useSessionStore((s) => s.updatePresence);
-  const setSocketConnected = useSessionStore((s) => s.setSocketConnected);
-  const setActiveQuestion = useSessionStore((s) => s.setActiveQuestion);
-  const clearActiveQuestion = useSessionStore((s) => s.clearActiveQuestion);
-  const setAnswerAccepted = useSessionStore((s) => s.setAnswerAccepted);
-  const setAnswerRejected = useSessionStore((s) => s.setAnswerRejected);
-  const setCountdownDeadline = useSessionStore((s) => s.setCountdownDeadline);
-  const updateQuestionDeadline = useSessionStore((s) => s.updateQuestionDeadline);
-  const setLastRoundResult = useSessionStore((s) => s.setLastRoundResult);
-  const setGameResult = useSessionStore((s) => s.setGameResult);
-  const setPhase = useSessionStore((s) => s.setPhase);
-  const setCategoryVoteStarted = useSessionStore((s) => s.setCategoryVoteStarted);
-  const updateCategoryVotes = useSessionStore((s) => s.updateCategoryVotes);
-  const setCategorySelected = useSessionStore((s) => s.setCategorySelected);
-  const updateCategoryVoteDeadline = useSessionStore((s) => s.updateCategoryVoteDeadline);
-  const updateSessionSettings = useSessionStore((s) => s.updateSessionSettings);
+  const {
+    credentials,
+    setSnapshot,
+    updatePresence,
+    setSocketConnected,
+    setActiveQuestion,
+    clearActiveQuestion,
+    setAnswerAccepted,
+    setAnswerRejected,
+    setCountdownDeadline,
+    updateQuestionDeadline,
+    setLastRoundResult,
+    setGameResult,
+    setPhase,
+    setCategoryVoteStarted,
+    updateCategoryVotes,
+    setCategorySelected,
+    updateCategoryVoteDeadline,
+    updateSessionSettings,
+  } = useSessionStore(
+    useShallow((s) => ({
+      credentials:              s.credentials,
+      setSnapshot:              s.setSnapshot,
+      updatePresence:           s.updatePresence,
+      setSocketConnected:       s.setSocketConnected,
+      setActiveQuestion:        s.setActiveQuestion,
+      clearActiveQuestion:      s.clearActiveQuestion,
+      setAnswerAccepted:        s.setAnswerAccepted,
+      setAnswerRejected:        s.setAnswerRejected,
+      setCountdownDeadline:     s.setCountdownDeadline,
+      updateQuestionDeadline:   s.updateQuestionDeadline,
+      setLastRoundResult:       s.setLastRoundResult,
+      setGameResult:            s.setGameResult,
+      setPhase:                 s.setPhase,
+      setCategoryVoteStarted:   s.setCategoryVoteStarted,
+      updateCategoryVotes:      s.updateCategoryVotes,
+      setCategorySelected:      s.setCategorySelected,
+      updateCategoryVoteDeadline: s.updateCategoryVoteDeadline,
+      updateSessionSettings:    s.updateSessionSettings,
+    })),
+  );
 
   // ── emit helpers ───────────────────────────────────────────────
 

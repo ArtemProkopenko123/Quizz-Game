@@ -164,7 +164,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
 
       {/* Color picker */}
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Цвет</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Color</p>
         <div className="flex gap-2.5">
           {COLORS.map((c) => (
             <button
@@ -173,7 +173,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
               onClick={() => setColor(c)}
               className="relative size-8 rounded-full transition-transform duration-150 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
               style={{ backgroundColor: c }}
-              aria-label={`Цвет ${c}`}
+              aria-label={`Color ${c}`}
             >
               {color === c && (
                 <span
@@ -188,7 +188,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
 
       {/* Avatar picker */}
       <div className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Аватар</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Avatar</p>
         <div className="grid grid-cols-6 gap-1.5">
           {AVATARS.map((a) => (
             <button
@@ -200,7 +200,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
                   ? 'ring-2 ring-violet-500 bg-violet-500/20'
                   : 'bg-white/6 hover:bg-white/12'
               }`}
-              aria-label={`Аватар ${a}`}
+              aria-label={`Avatar ${a}`}
             >
               {a}
             </button>
@@ -231,7 +231,7 @@ export function HomeForm({ initialCode }: HomeFormProps) {
           loading={isPending}
           disabled={!canSubmit}
         >
-          {mode === 'create' ? 'Создать игру' : 'Войти в игру'}
+          {mode === 'create' ? 'Create game' : 'Join game'}
         </DarkButton>
       </div>
     </form>
