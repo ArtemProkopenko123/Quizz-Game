@@ -7,11 +7,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const isProd = process.env['NODE_ENV'] === 'production';
+  const allowedOrigins = isProd
+    ? (process.env['FRONTEND_URL'] ?? 'http://localhost:3000')
+        .split(',')
+        .map((o) => o.trim())
+    : true;
   app.enableCors({
     // In dev, allow any origin (e.g. http://192.168.x.x:3000 from a phone on LAN).
-    origin: isProd
-      ? (process.env['FRONTEND_URL'] ?? 'http://localhost:3000')
-      : true,
+    origin: allowedOrigins,
     credentials: true,
   });
 
