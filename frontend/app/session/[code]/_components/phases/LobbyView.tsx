@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { Settings2, Share2, Copy, Check, Zap, Users, Clock, Hash, Rocket, CheckCircle2, Circle } from 'lucide-react';
 import { useSessionStore } from '@/stores/session.store';
 import { SettingsModal } from '../SettingsModal';
+import { cn } from '@/lib/cn';
 import type { PlayerSnapshot, SessionSettings } from '@/types/session.types';
 
 interface Props {
@@ -23,101 +25,105 @@ export function LobbyView({ emitReady, emitStartGame, emitUpdateSettings }: Prop
 
   const [showSettings, setShowSettings] = useState(false);
 
-  // Pack count for maxRounds in SettingsModal — we don't know it from the client
-  // without an API call, so we cap at 5 (current pack count)
   const MAX_ROUNDS = 5;
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col lg:flex-row">
 
-      {/* Header */}
-      <header className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">Lobby</p>
-          <p className="mt-0.5 text-sm font-semibold text-white/60">
-            {readyCount}/{players.length} ready
+      {/* ── Left panel (or top on mobile) ── */}
+      <div className="flex flex-col lg:w-80 xl:w-96 lg:border-r lg:border-white/7">
+
+        {/* Header */}
+        <header className="flex items-center justify-between px-5 py-4 border-b border-white/7">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">Lobby</p>
+            <p className="mt-0.5 text-sm font-semibold text-white/60">
+              {readyCount}/{players.length} ready
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {isHost && (
+              <IconButton onClick={() => setShowSettings(true)} title="Game settings">
+                <Settings2 className="size-4.5 text-white/70" />
+              </IconButton>
+            )}
+            {isHost && <ShareButton code={code} />}
+            <CodeBadge code={code} />
+          </div>
+        </header>
+
+        {/* Settings badges */}
+        <div className="flex flex-wrap gap-2 px-5 py-3 border-b border-white/7">
+          <SettingBadge icon={<Hash className="size-3.5" />} label={`${settings.roundCount} ${settings.roundCount === 1 ? 'round' : 'rounds'}`} />
+          <SettingBadge icon={<Zap className="size-3.5" />} label={`${settings.questionsPerRound} questions`} />
+          <SettingBadge icon={<Clock className="size-3.5" />} label={`${settings.questionDuration}s`} />
+        </div>
+
+        {/* Player list */}
+        <ul className="flex flex-1 flex-col gap-2 overflow-y-auto p-4 lg:max-h-[calc(100vh-280px)]">
+          {players.map((player) => (
+            <PlayerCard
+              key={player.playerId}
+              player={player}
+              isHost={player.playerId === hostPlayerId}
+              isSelf={player.playerId === selfPlayerId}
+            />
+          ))}
+        </ul>
+      </div>
+
+      {/* ── Right panel / bottom on mobile ── */}
+      <div className="flex flex-1 flex-col">
+
+        {/* Desktop: waiting area with big room code */}
+        <div className="hidden lg:flex flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
+          <div className="flex size-20 items-center justify-center rounded-3xl bg-violet-600/20 ring-1 ring-violet-500/30">
+            <Users className="size-10 text-violet-400" />
+          </div>
+          <div>
+            <p className="text-2xl font-black text-white">Waiting for players</p>
+            <p className="mt-1 text-sm text-white/40">Share the code below so friends can join</p>
+          </div>
+          <div className="rounded-2xl bg-white/6 px-8 py-5 ring-1 ring-white/10">
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/30 mb-2">Room code</p>
+            <p className="font-mono text-5xl font-black tracking-[0.3em] text-white">{code}</p>
+          </div>
+          <p className="text-xs text-white/25">
+            {readyCount < players.length
+              ? `Waiting for ${players.length - readyCount} more player${players.length - readyCount !== 1 ? 's' : ''} to ready up`
+              : 'All players ready!'}
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Settings gear — host only */}
+        {/* Footer with action buttons */}
+        <footer className="space-y-3 p-4 border-t border-white/7">
+          <button
+            onClick={() => emitReady(!isReady)}
+            className={cn(
+              'inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2.5 rounded-2xl text-base font-bold transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-violet-400 focus-visible:outline-offset-2',
+              isReady
+                ? 'bg-white/8 text-white/60 ring-1 ring-white/10'
+                : 'bg-linear-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-900/40',
+            )}
+          >
+            {isReady
+              ? <><CheckCircle2 className="size-5" /> Ready</>
+              : <><Circle className="size-5" /> Ready!</>
+            }
+          </button>
+
           {isHost && (
             <button
-              onClick={() => setShowSettings(true)}
-              title="Game settings"
-              className="flex size-10 cursor-pointer items-center justify-center rounded-xl transition-all duration-150 active:scale-90"
-              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
+              onClick={emitStartGame}
+              className="inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2.5 rounded-2xl text-base font-bold text-white shadow-lg shadow-fuchsia-900/40 transition-all duration-150 active:scale-[0.97] bg-linear-to-r from-pink-600 to-purple-600 focus-visible:outline-2 focus-visible:outline-violet-400 focus-visible:outline-offset-2"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-              </svg>
+              <Rocket className="size-5" /> Start game
             </button>
           )}
-
-          {isHost && <ShareIcon code={code} />}
-          <CodeBadge code={code} />
-        </div>
-      </header>
-
-      {/* Settings badge — visible to all */}
-      <div className="flex justify-center gap-3 px-5 py-2.5">
-        {[
-          `${settings.roundCount} ${settings.roundCount === 1 ? 'round' : 'rounds'}`,
-          `${settings.questionsPerRound} questions`,
-          `${settings.questionDuration}s`,
-        ].map((label) => (
-          <span
-            key={label}
-            className="rounded-lg px-2.5 py-1 text-xs font-semibold text-white/40"
-            style={{ background: 'rgba(255,255,255,0.06)' }}
-          >
-            {label}
-          </span>
-        ))}
+        </footer>
       </div>
 
-      {/* Player list */}
-      <ul className="flex flex-1 flex-col gap-2.5 overflow-y-auto p-4">
-        {players.map((player) => (
-          <PlayerCard
-            key={player.playerId}
-            player={player}
-            isHost={player.playerId === hostPlayerId}
-            isSelf={player.playerId === selfPlayerId}
-          />
-        ))}
-      </ul>
-
-      {/* Footer */}
-      <footer className="space-y-3 p-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-        <button
-          onClick={() => emitReady(!isReady)}
-          className={`inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2 rounded-2xl text-base font-bold transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-violet-400 focus-visible:outline-offset-2 ${
-            isReady ? 'text-white/60' : 'text-white shadow-lg shadow-violet-900/40'
-          }`}
-          style={{
-            background: isReady
-              ? 'rgba(255,255,255,0.08)'
-              : 'linear-gradient(135deg, #7c3aed, #a855f7)',
-            border: isReady ? '1px solid rgba(255,255,255,0.1)' : 'none',
-          }}
-        >
-          {isReady ? '✓ Ready' : 'Ready!'}
-        </button>
-
-        {isHost && (
-          <button
-            onClick={emitStartGame}
-            className="inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2 rounded-2xl text-base font-bold text-white shadow-lg shadow-fuchsia-900/40 transition-all duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-violet-400 focus-visible:outline-offset-2"
-            style={{ background: 'linear-gradient(135deg, #db2777, #9333ea)' }}
-          >
-            🚀 Start game
-          </button>
-        )}
-      </footer>
-
-      {/* Settings modal */}
       {showSettings && (
         <SettingsModal
           settings={settings}
@@ -127,6 +133,28 @@ export function LobbyView({ emitReady, emitStartGame, emitUpdateSettings }: Prop
         />
       )}
     </div>
+  );
+}
+
+// ── IconButton ───────────────────────────────────────────────
+function IconButton({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      className="flex size-10 cursor-pointer items-center justify-center rounded-xl bg-white/8 ring-1 ring-white/12 transition-all hover:bg-white/14 active:scale-90"
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ── SettingBadge ─────────────────────────────────────────────
+function SettingBadge({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/6 px-2.5 py-1 text-xs font-semibold text-white/40">
+      {icon}
+      {label}
+    </span>
   );
 }
 
@@ -143,21 +171,21 @@ function CodeBadge({ code }: { code: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="flex cursor-pointer items-center gap-2.5 rounded-xl px-4 py-2 transition-all active:scale-95"
-      style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
+      className="flex cursor-pointer items-center gap-2 rounded-xl bg-white/8 px-3.5 py-2 ring-1 ring-white/12 transition-all hover:bg-white/14 active:scale-95"
     >
-      <span className="font-mono text-base font-black tracking-[0.2em] text-white">
+      <span className="font-mono text-sm font-black tracking-[0.2em] text-white">
         {code}
       </span>
-      <span className="text-xs font-medium text-white/40">
-        {copied ? '✓' : '⎘'}
-      </span>
+      {copied
+        ? <Check className="size-3.5 text-emerald-400" />
+        : <Copy className="size-3.5 text-white/40" />
+      }
     </button>
   );
 }
 
-// ── ShareIcon ────────────────────────────────────────────────
-function ShareIcon({ code }: { code: string }) {
+// ── ShareButton ──────────────────────────────────────────────
+function ShareButton({ code }: { code: string }) {
   const [done, setDone] = useState(false);
 
   async function handleShare() {
@@ -174,34 +202,19 @@ function ShareIcon({ code }: { code: string }) {
   }
 
   return (
-    <button
-      onClick={handleShare}
-      title="Share link"
-      className="flex size-10 cursor-pointer items-center justify-center rounded-xl transition-all duration-150 active:scale-90"
-      style={{ background: done ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.08)', border: `1px solid ${done ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.12)'}` }}
-    >
-      {done ? (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="20 6 9 17 4 12" />
-        </svg>
-      ) : (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-        </svg>
-      )}
-    </button>
+    <IconButton onClick={handleShare} title="Share link">
+      {done
+        ? <Check className="size-4.5 text-emerald-400" />
+        : <Share2 className="size-4.5 text-white/70" />
+      }
+    </IconButton>
   );
 }
 
 // ── PlayerCard ───────────────────────────────────────────────
 function PlayerCard({ player, isHost, isSelf }: { player: PlayerSnapshot; isHost: boolean; isSelf: boolean }) {
   return (
-    <li
-      className="flex items-center gap-3.5 rounded-2xl px-4 py-3.5 animate-fade-up"
-      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
-    >
-      {/* Avatar */}
+    <li className="flex items-center gap-3.5 rounded-2xl bg-white/6 px-4 py-3.5 ring-1 ring-white/8 animate-fade-up">
       <span
         className="flex size-10 shrink-0 items-center justify-center rounded-full text-xl ring-2 ring-white/15"
         style={{ backgroundColor: player.color }}
@@ -209,7 +222,6 @@ function PlayerCard({ player, isHost, isSelf }: { player: PlayerSnapshot; isHost
         {player.avatarUrl ?? '👤'}
       </span>
 
-      {/* Name + badges */}
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="truncate text-sm font-bold text-white">
           {player.name}
@@ -217,21 +229,25 @@ function PlayerCard({ player, isHost, isSelf }: { player: PlayerSnapshot; isHost
         </span>
         <div className="flex items-center gap-1.5">
           {isHost && (
-            <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-300" style={{ background: 'rgba(139,92,246,0.2)' }}>
+            <span className="rounded-md bg-violet-500/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-300">
               Host
             </span>
           )}
           {player.isReady && (
-            <span className="rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300" style={{ background: 'rgba(16,185,129,0.2)' }}>
+            <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
               Ready
             </span>
           )}
         </div>
       </div>
 
-      {/* Online dot */}
       <span
-        className={`size-2.5 shrink-0 rounded-full ${player.isConnected ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]' : 'bg-white/20'}`}
+        className={cn(
+          'size-2.5 shrink-0 rounded-full',
+          player.isConnected
+            ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]'
+            : 'bg-white/20',
+        )}
       />
     </li>
   );

@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { Vote } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSessionStore } from '@/stores/session.store';
 import { useCountdown } from '@/hooks/useCountdown';
+import { cn } from '@/lib/cn';
 import type { PackOption } from '@/types/session.types';
 
 const VOTE_SECONDS = 30;
@@ -16,7 +18,6 @@ const PACK_CONFIGS = [
   { color: '#8b5cf6', idleBg: 'rgba(139,92,246,0.13)', selBg: 'rgba(139,92,246,0.32)', glow: '0 0 28px rgba(139,92,246,0.55)', border: 'rgba(139,92,246,0.5)' },
 ] as const;
 
-// ── Circular Timer ───────────────────────────────────────────
 const RADIUS = 52;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
@@ -53,14 +54,13 @@ function CircularTimer({ progress, secondsLeft }: { progress: number; secondsLef
           style={{ transition: 'stroke-dashoffset 0.1s linear, stroke 0.3s ease' }}
         />
       </svg>
-      <span className={`absolute text-4xl font-black tabular-nums ${isUrgent ? 'text-red-400' : 'text-white'}`}>
+      <span className={cn('absolute text-4xl font-black tabular-nums', isUrgent ? 'text-red-400' : 'text-white')}>
         {secondsLeft}
       </span>
     </div>
   );
 }
 
-// ── Main Component ───────────────────────────────────────────
 interface Props {
   emitCategoryVote: (packId: string) => void;
 }
@@ -87,7 +87,6 @@ export function CategoryVoteView({ emitCategoryVote }: Props) {
   );
 
   const [selectedPackId, setSelectedPackId] = useState<string | null>(null);
-
   const { secondsLeft, progress } = useCountdown(voteDeadline, VOTE_SECONDS);
 
   const players = snapshot?.players ?? [];
@@ -99,7 +98,6 @@ export function CategoryVoteView({ emitCategoryVote }: Props) {
     emitCategoryVote(packId);
   }
 
-  // Vote count per pack
   const voteCounts: Record<string, string[]> = {};
   for (const [playerId, packId] of Object.entries(categoryVotes)) {
     if (!voteCounts[packId]) voteCounts[packId] = [];
@@ -107,68 +105,71 @@ export function CategoryVoteView({ emitCategoryVote }: Props) {
   }
 
   return (
-    <div className="flex flex-1 flex-col p-5 gap-5">
+    <div className="flex flex-1 flex-col lg:flex-row lg:gap-0">
 
-      {/* Header */}
-      <div className="flex flex-col items-center gap-1 animate-fade-up">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">
-          Round {stageIndex + 1} of {totalStages}
-        </p>
-        <p className="text-xl font-black text-white">Choose a category</p>
-      </div>
+      {/* ── Left: header + timer ── */}
+      <div className="flex flex-col items-center justify-center gap-5 px-6 py-6 lg:w-72 xl:w-80 lg:border-r lg:border-white/7 lg:py-10">
 
-      {/* Timer */}
-      <div
-        className="flex h-[148px] items-center justify-center animate-fade-up"
-        style={{ animationDelay: '60ms' }}
-      >
-        {!categoryWinner ? (
-          <CircularTimer progress={progress} secondsLeft={secondsLeft} />
-        ) : (
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-4xl">{categoryWinner.packEmoji}</span>
-            <span className="text-sm font-black text-white">{categoryWinner.packTitle}</span>
-            <span className="text-xs text-white/40">Voting complete</span>
+        <div className="flex flex-col items-center gap-1 animate-fade-up">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/30">
+            Round {stageIndex + 1} of {totalStages}
+          </p>
+          <p className="text-xl font-black text-white lg:text-2xl">Choose a category</p>
+        </div>
+
+        <div className="flex h-[148px] items-center justify-center animate-fade-up" style={{ animationDelay: '60ms' }}>
+          {!categoryWinner ? (
+            <CircularTimer progress={progress} secondsLeft={secondsLeft} />
+          ) : (
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-5xl">{categoryWinner.packEmoji}</span>
+              <span className="text-sm font-black text-white">{categoryWinner.packTitle}</span>
+              <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold text-emerald-300">Voting complete</span>
+            </div>
+          )}
+        </div>
+
+        {!categoryWinner && !selectedPackId && (
+          <div className="flex items-center gap-2 animate-fade-up" style={{ animationDelay: '300ms' }}>
+            <Vote className="size-4 text-white/20" />
+            <p className="text-xs text-white/25">Too slow — category chosen randomly</p>
           </div>
         )}
       </div>
 
-      {/* Category cards */}
-      <div className="grid grid-cols-2 gap-3 flex-1">
-        {availablePacks.map((pack, i) => {
-          const cfg = PACK_CONFIGS[i % PACK_CONFIGS.length]!;
-          const voters = (voteCounts[pack.id] ?? [])
-            .map((pid) => players.find((p) => p.playerId === pid) ?? null)
-            .filter(Boolean) as Array<{ playerId: string; name: string; color: string; avatarUrl: string | null }>;
+      {/* ── Right: category cards ── */}
+      <div className="flex-1 p-4 lg:p-6">
+        <div className={cn(
+          'grid gap-3',
+          availablePacks.length <= 4 ? 'grid-cols-2' : 'grid-cols-2 lg:grid-cols-3',
+        )}>
+          {availablePacks.map((pack, i) => {
+            const cfg = PACK_CONFIGS[i % PACK_CONFIGS.length]!;
+            const voters = (voteCounts[pack.id] ?? [])
+              .map((pid) => players.find((p) => p.playerId === pid) ?? null)
+              .filter(Boolean) as Array<{ playerId: string; name: string; color: string; avatarUrl: string | null }>;
 
-          return (
-            <CategoryCard
-              key={pack.id}
-              pack={pack}
-              cfg={cfg}
-              voters={voters}
-              isSelected={selectedPackId === pack.id}
-              isWinner={categoryWinner?.packId === pack.id}
-              isLoser={!!categoryWinner && categoryWinner.packId !== pack.id}
-              animDelay={i * 80}
-              onVote={() => handleVote(pack.id)}
-              selfVoted={categoryVotes[selfPlayerId] === pack.id}
-            />
-          );
-        })}
+            return (
+              <CategoryCard
+                key={pack.id}
+                pack={pack}
+                cfg={cfg}
+                voters={voters}
+                isSelected={selectedPackId === pack.id}
+                isWinner={categoryWinner?.packId === pack.id}
+                isLoser={!!categoryWinner && categoryWinner.packId !== pack.id}
+                animDelay={i * 80}
+                onVote={() => handleVote(pack.id)}
+                selfVoted={categoryVotes[selfPlayerId] === pack.id}
+              />
+            );
+          })}
+        </div>
       </div>
-
-      {/* Hint */}
-      {!categoryWinner && !selectedPackId && (
-        <p className="text-center text-xs text-white/25 animate-fade-up" style={{ animationDelay: '300ms' }}>
-          Too slow — category will be chosen randomly
-        </p>
-      )}
     </div>
   );
 }
 
-// ── Category card ────────────────────────────────────────────────
 interface CardCfg {
   color: string;
   idleBg: string;
@@ -212,23 +213,18 @@ function CategoryCard({ pack, cfg, voters, isSelected, isWinner, isLoser, animDe
   }
 
   return (
-    <div
-      className="animate-pop-in"
-      style={{ animationDelay: `${animDelay}ms` }}
-    >
+    <div className="animate-pop-in" style={{ animationDelay: `${animDelay}ms` }}>
       <button
         key={isActive && !isWinner && !isLoser ? `${pack.id}-sel` : pack.id}
         onClick={onVote}
         disabled={!!isWinner || !!isLoser}
-        className={`w-full min-h-[140px] flex flex-col items-center gap-3 rounded-2xl p-4 text-center transition-all duration-150 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400 ${extraCls} ${isActive && !isWinner && !isLoser ? 'animate-answer-bounce' : ''}`}
-        style={{
-          background,
-          border: `1px solid ${borderColor}`,
-          boxShadow,
-          opacity,
-        }}
+        className={cn(
+          'w-full min-h-[140px] flex flex-col items-center gap-3 rounded-2xl p-4 text-center transition-all duration-150 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400',
+          extraCls,
+          isActive && !isWinner && !isLoser && 'animate-answer-bounce',
+        )}
+        style={{ background, border: `1px solid ${borderColor}`, boxShadow, opacity }}
       >
-        {/* Emoji badge */}
         <span
           className="flex size-12 items-center justify-center rounded-2xl text-3xl"
           style={{
@@ -239,13 +235,11 @@ function CategoryCard({ pack, cfg, voters, isSelected, isWinner, isLoser, animDe
           {pack.emoji}
         </span>
 
-        {/* Title */}
         <div>
           <p className="text-sm font-black text-white leading-tight">{pack.title}</p>
           <p className="text-xs text-white/30 mt-0.5">{pack.questionCount} questions</p>
         </div>
 
-        {/* Voter avatars */}
         <div className="flex justify-center min-h-[28px]">
           {voters.length > 0 ? (
             <div className="flex -space-x-2">
@@ -253,20 +247,14 @@ function CategoryCard({ pack, cfg, voters, isSelected, isWinner, isLoser, animDe
                 <span
                   key={v.playerId}
                   className="flex size-7 items-center justify-center rounded-full text-sm ring-2"
-                  style={{
-                    backgroundColor: v.color,
-                    '--tw-ring-color': 'rgba(15,10,30,1)',
-                  } as React.CSSProperties}
+                  style={{ backgroundColor: v.color, '--tw-ring-color': 'rgba(15,10,30,1)' } as React.CSSProperties}
                   title={v.name}
                 >
                   {v.avatarUrl ?? '👤'}
                 </span>
               ))}
               {voters.length > 5 && (
-                <span
-                  className="flex size-7 items-center justify-center rounded-full text-xs font-bold text-white ring-2"
-                  style={{ backgroundColor: 'rgba(139,92,246,0.5)' }}
-                >
+                <span className="flex size-7 items-center justify-center rounded-full bg-violet-500/50 text-xs font-bold text-white ring-2">
                   +{voters.length - 5}
                 </span>
               )}
@@ -276,7 +264,6 @@ function CategoryCard({ pack, cfg, voters, isSelected, isWinner, isLoser, animDe
           )}
         </div>
 
-        {/* Vote count badge */}
         {voters.length > 0 && (
           <span
             className="rounded-full px-2.5 py-0.5 text-xs font-bold"

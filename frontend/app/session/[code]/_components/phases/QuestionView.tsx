@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Trophy } from 'lucide-react';
 import { useSessionStore } from '@/stores/session.store';
 import { useCountdown } from '@/hooks/useCountdown';
+import { cn } from '@/lib/cn';
 
 const QUESTION_SECONDS = 20;
 const OPTION_LABELS = ['A', 'B', 'C', 'D'] as const;
@@ -51,7 +53,7 @@ function CircularTimer({ progress, secondsLeft }: { progress: number; secondsLef
           style={{ transition: 'stroke-dashoffset 0.1s linear, stroke 0.3s ease' }}
         />
       </svg>
-      <span className={`absolute text-4xl font-black tabular-nums ${isUrgent ? 'text-red-400' : 'text-white'}`}>
+      <span className={cn('absolute text-4xl font-black tabular-nums', isUrgent ? 'text-red-400' : 'text-white')}>
         {secondsLeft}
       </span>
     </div>
@@ -83,7 +85,6 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
   if (!activeQuestion) return null;
 
   const { questionId, prompt, options, roundIndex, totalRounds } = activeQuestion;
-
   const showResult   = lastRoundResult?.questionId === questionId;
   const correctIndex = lastRoundResult?.correctAnswerIndex ?? -1;
 
@@ -104,8 +105,10 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
     : [...snapshotPlayers].sort((a, b) => b.score - a.score);
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div key={questionId} className="flex flex-col">
+    <div className="flex flex-1 flex-col lg:flex-row">
+
+      {/* ── Main game area ── */}
+      <div key={questionId} className="flex flex-1 flex-col">
 
         {/* Round counter */}
         <header className="flex justify-center px-4 pt-5 pb-1 animate-fade-up">
@@ -114,13 +117,9 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
           </span>
         </header>
 
-        {/* Timer — fixed height to avoid layout shift */}
-        <div
-          className="flex h-[148px] items-center justify-center animate-fade-up"
-          style={{ animationDelay: '60ms' }}
-        >
+        {/* Timer */}
+        <div className="flex h-[148px] items-center justify-center animate-fade-up" style={{ animationDelay: '60ms' }}>
           {!showResult && <CircularTimer progress={progress} secondsLeft={secondsLeft} />}
-
           {showResult && (
             <div className="flex flex-col items-center gap-1">
               <span className="text-4xl">✅</span>
@@ -131,12 +130,11 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
 
         {/* Question prompt */}
         <div className="px-5 pb-3 animate-fade-up" style={{ animationDelay: '120ms' }}>
-          <p className="text-center text-2xl font-bold leading-snug text-white drop-shadow-lg">
+          <p className="text-center text-2xl font-bold leading-snug text-white drop-shadow-lg lg:text-3xl">
             {prompt}
           </p>
         </div>
 
-        {/* Submitted hint */}
         {selectedIndex !== null && !showResult && (
           <p className="mb-1 text-center text-xs font-medium text-white/30">
             Answer submitted · tap to change
@@ -178,23 +176,19 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
             }
 
             return (
-              <div
-                key={index}
-                className="animate-pop-in"
-                style={{ animationDelay: `${200 + index * 80}ms` }}
-              >
+              <div key={index} className="animate-pop-in" style={{ animationDelay: `${200 + index * 80}ms` }}>
                 <button
                   key={isSelected ? `${index}-sel` : index}
                   disabled={showResult}
                   onClick={() => handleSelect(index)}
-                  className={`w-full min-h-[88px] flex flex-col items-start gap-2.5 rounded-2xl p-3.5 text-left transition-all duration-150 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400 ${isDimmed ? 'opacity-35' : ''} ${extraCls} ${isSelected && !showResult ? 'animate-answer-bounce' : ''}`}
-                  style={{
-                    background,
-                    boxShadow,
-                    border: `1px solid ${borderColor}`,
-                  }}
+                  className={cn(
+                    'w-full min-h-[88px] flex flex-col items-start gap-2.5 rounded-2xl p-3.5 text-left transition-all duration-150 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400',
+                    isDimmed && 'opacity-35',
+                    extraCls,
+                    isSelected && !showResult && 'animate-answer-bounce',
+                  )}
+                  style={{ background, boxShadow, border: `1px solid ${borderColor}` }}
                 >
-                  {/* Label badge */}
                   <span
                     className="flex size-8 shrink-0 items-center justify-center rounded-xl text-sm font-black text-white"
                     style={{
@@ -204,8 +198,10 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
                   >
                     {label}
                   </span>
-                  {/* Option text */}
-                  <span className={`text-sm font-semibold leading-snug ${isCorrect ? 'text-emerald-300' : isWrong ? 'text-red-300' : isSelected ? 'text-white' : 'text-white/80'}`}>
+                  <span className={cn(
+                    'text-sm font-semibold leading-snug',
+                    isCorrect ? 'text-emerald-300' : isWrong ? 'text-red-300' : isSelected ? 'text-white' : 'text-white/80',
+                  )}>
                     {option}
                   </span>
                 </button>
@@ -213,38 +209,64 @@ export function QuestionView({ emitSubmitAnswer }: Props) {
             );
           })}
         </div>
+
+        {/* Mobile scoreboard */}
+        {players.length > 0 && (
+          <ul className="mx-4 mb-5 mt-auto flex flex-col gap-2 lg:hidden">
+            {players.map((player, rank) => (
+              <ScoreRow key={player.playerId} player={player} rank={rank} showResult={showResult} />
+            ))}
+          </ul>
+        )}
       </div>
 
-      {/* Scoreboard */}
+      {/* ── Desktop scoreboard sidebar ── */}
       {players.length > 0 && (
-        <ul className="mx-4 mb-5 mt-auto flex flex-col gap-2">
-          {players.map((player, rank) => {
-            const delta = showResult && 'roundScore' in player ? player.roundScore : null;
-            return (
-              <li
-                key={player.playerId}
-                className="flex items-center gap-3 rounded-xl px-4 py-2.5"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
-              >
-                <span className="w-4 text-center text-xs font-bold text-white/25">{rank + 1}</span>
-                <div
-                  className="flex size-7 shrink-0 items-center justify-center rounded-full text-sm ring-2 ring-white/15"
-                  style={{ backgroundColor: player.color }}
-                >
-                  {player.avatarUrl ?? '👤'}
-                </div>
-                <span className="flex-1 truncate text-sm font-semibold text-white/80">{player.name}</span>
-                {delta !== null && (
-                  delta > 0
-                    ? <span className="text-xs font-bold text-emerald-400">+{delta}</span>
-                    : <span className="text-xs text-white/25">—</span>
-                )}
-                <span className="text-sm font-black tabular-nums text-white">{player.score}</span>
-              </li>
-            );
-          })}
-        </ul>
+        <aside className="hidden lg:flex w-72 xl:w-80 flex-col border-l border-white/7 p-4 gap-3">
+          <div className="flex items-center gap-2 px-1 pb-2 border-b border-white/7">
+            <Trophy className="size-4 text-yellow-400" />
+            <span className="text-xs font-bold uppercase tracking-widest text-white/40">Scoreboard</span>
+          </div>
+          <ul className="flex flex-col gap-2">
+            {players.map((player, rank) => (
+              <ScoreRow key={player.playerId} player={player} rank={rank} showResult={showResult} />
+            ))}
+          </ul>
+        </aside>
       )}
     </div>
+  );
+}
+
+// ── ScoreRow ─────────────────────────────────────────────────
+function ScoreRow({
+  player,
+  rank,
+  showResult,
+}: {
+  player: { playerId: string; name: string; color: string; avatarUrl: string | null; score: number; roundScore?: number };
+  rank: number;
+  showResult: boolean;
+}) {
+  const delta = showResult && 'roundScore' in player ? (player.roundScore ?? null) : null;
+  return (
+    <li
+      className="flex items-center gap-3 rounded-xl bg-white/6 px-4 py-2.5 ring-1 ring-white/8"
+    >
+      <span className="w-4 text-center text-xs font-bold text-white/25">{rank + 1}</span>
+      <div
+        className="flex size-7 shrink-0 items-center justify-center rounded-full text-sm ring-2 ring-white/15"
+        style={{ backgroundColor: player.color }}
+      >
+        {player.avatarUrl ?? '👤'}
+      </div>
+      <span className="flex-1 truncate text-sm font-semibold text-white/80">{player.name}</span>
+      {delta !== null && (
+        delta > 0
+          ? <span className="text-xs font-bold text-emerald-400">+{delta}</span>
+          : <span className="text-xs text-white/25">—</span>
+      )}
+      <span className="text-sm font-black tabular-nums text-white">{player.score}</span>
+    </li>
   );
 }

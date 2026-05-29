@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { api, type PackInfo } from '@/lib/api';
+import { Gamepad2, Link2, ArrowLeft, Loader2, Check } from 'lucide-react';
+import { api } from '@/lib/api';
 import { useSessionStore } from '@/stores/session.store';
+import { cn } from '@/lib/cn';
 
 type Mode = 'pick' | 'create' | 'join';
 
@@ -19,7 +21,6 @@ const AVATARS = [
   '🦋', '🐧', '🦄',
 ];
 
-/* ── Dark-themed input ─────────────────────────────────────── */
 function DarkInput({
   label,
   ...props
@@ -37,9 +38,8 @@ function DarkInput({
   );
 }
 
-/* ── Dark-themed button ────────────────────────────────────── */
 interface BtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'ghost';
+  variant?: 'primary' | 'ghost' | 'outline';
   loading?: boolean;
 }
 function DarkButton({ variant = 'primary', loading, className = '', children, disabled, ...props }: BtnProps) {
@@ -47,18 +47,17 @@ function DarkButton({ variant = 'primary', loading, className = '', children, di
     'inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl text-base font-bold transition-all duration-150 focus-visible:outline-2 focus-visible:outline-violet-400 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
   const variants = {
     primary:
-      'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-900/40 hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.97]',
+      'bg-linear-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-900/40 hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.97]',
     ghost:
       'bg-white/8 text-white/70 ring-1 ring-white/12 hover:bg-white/14 hover:text-white active:scale-[0.97]',
+    outline:
+      'border border-white/15 text-white/60 hover:bg-white/8 hover:text-white active:scale-[0.97]',
   };
   return (
-    <button className={`${base} ${variants[variant]} ${className}`} disabled={disabled ?? loading} {...props}>
+    <button className={cn(base, variants[variant], className)} disabled={disabled ?? loading} {...props}>
       {loading ? (
         <>
-          <svg className="size-4 animate-spin" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-          </svg>
+          <Loader2 className="size-4 animate-spin" />
           {children}
         </>
       ) : children}
@@ -66,7 +65,6 @@ function DarkButton({ variant = 'primary', loading, className = '', children, di
   );
 }
 
-/* ── Main form ─────────────────────────────────────────────── */
 interface HomeFormProps {
   initialCode?: string;
 }
@@ -82,7 +80,6 @@ export function HomeForm({ initialCode }: HomeFormProps) {
   const [joinCode, setJoinCode] = useState(initialCode ?? '');
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
-
 
   const canSubmit = name.trim().length > 0 && (mode === 'create' || joinCode.trim().length > 0);
 
@@ -122,21 +119,19 @@ export function HomeForm({ initialCode }: HomeFormProps) {
     });
   }
 
-  /* ── Pick mode ── */
   if (mode === 'pick') {
     return (
       <div className="space-y-3">
         <DarkButton onClick={() => setMode('create')}>
-          <span className="text-lg">🎮</span> Create game
+          <Gamepad2 className="size-5" /> Create game
         </DarkButton>
         <DarkButton variant="ghost" onClick={() => setMode('join')}>
-          <span className="text-lg">🔗</span> Join game
+          <Link2 className="size-5" /> Join game
         </DarkButton>
       </div>
     );
   }
 
-  /* ── Create / Join form ── */
   return (
     <form
       className="space-y-5"
@@ -176,10 +171,9 @@ export function HomeForm({ initialCode }: HomeFormProps) {
               aria-label={`Color ${c}`}
             >
               {color === c && (
-                <span
-                  className="absolute inset-0 rounded-full ring-2 ring-offset-2 ring-offset-slate-900"
-                  style={{ '--tw-ring-color': c } as React.CSSProperties}
-                />
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <Check className="size-4 text-white drop-shadow" />
+                </span>
               )}
             </button>
           ))}
@@ -195,11 +189,12 @@ export function HomeForm({ initialCode }: HomeFormProps) {
               key={a}
               type="button"
               onClick={() => setAvatar(a)}
-              className={`flex h-10 items-center justify-center rounded-xl text-xl transition-all duration-150 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400 ${
+              className={cn(
+                'flex h-10 items-center justify-center rounded-xl text-xl transition-all duration-150 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400',
                 avatar === a
                   ? 'ring-2 ring-violet-500 bg-violet-500/20'
-                  : 'bg-white/6 hover:bg-white/12'
-              }`}
+                  : 'bg-white/6 hover:bg-white/12',
+              )}
               aria-label={`Avatar ${a}`}
             >
               {a}
@@ -207,8 +202,6 @@ export function HomeForm({ initialCode }: HomeFormProps) {
           ))}
         </div>
       </div>
-
-
 
       {error && (
         <p className="rounded-lg bg-red-500/15 px-3 py-2 text-sm font-medium text-red-400">
@@ -221,9 +214,9 @@ export function HomeForm({ initialCode }: HomeFormProps) {
           type="button"
           onClick={() => setMode('pick')}
           disabled={isPending}
-          className="h-12 flex-1 rounded-xl text-sm font-semibold text-white/50 transition hover:text-white/80 disabled:opacity-50 cursor-pointer"
+          className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 rounded-xl text-sm font-semibold text-white/50 transition hover:text-white/80 disabled:opacity-50 cursor-pointer"
         >
-          ← Back
+          <ArrowLeft className="size-4" /> Back
         </button>
         <DarkButton
           type="submit"
