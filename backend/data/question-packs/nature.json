@@ -1,128 +1,128 @@
 {
   "id": "nature",
-  "title": "Природа",
+  "title": "Nature",
   "emoji": "🌿",
   "version": 2,
-  "language": "ru",
+  "language": "en",
   "questions": [
     {
       "id": "nat-001",
-      "prompt": "Какое животное является самым большим в мире?",
-      "options": ["Слон", "Акула-кит", "Синий кит", "Жираф"],
+      "prompt": "Which animal is the largest in the world?",
+      "options": ["Elephant", "Whale shark", "Blue whale", "Giraffe"],
       "correctAnswerIndex": 2
     },
     {
       "id": "nat-002",
-      "prompt": "Сколько ног у паука?",
+      "prompt": "How many legs does a spider have?",
       "options": ["6", "8", "10", "12"],
       "correctAnswerIndex": 1
     },
     {
       "id": "nat-003",
-      "prompt": "Какое дерево является самым высоким в мире?",
-      "options": ["Эвкалипт", "Баобаб", "Сосна", "Секвойя"],
+      "prompt": "Which tree is the tallest in the world?",
+      "options": ["Eucalyptus", "Baobab", "Pine", "Redwood"],
       "correctAnswerIndex": 3
     },
     {
       "id": "nat-004",
-      "prompt": "Сколько сердец у осьминога?",
+      "prompt": "How many hearts does an octopus have?",
       "options": ["1", "2", "3", "4"],
       "correctAnswerIndex": 2
     },
     {
       "id": "nat-005",
-      "prompt": "Как называется детёныш лошади?",
-      "options": ["Телёнок", "Жеребёнок", "Ягнёнок", "Пони"],
+      "prompt": "What is a baby horse called?",
+      "options": ["Calf", "Foal", "Lamb", "Pony"],
       "correctAnswerIndex": 1
     },
     {
       "id": "nat-006",
-      "prompt": "Какая птица является самой быстрой в мире?",
-      "options": ["Орёл", "Стриж", "Альбатрос", "Сапсан"],
+      "prompt": "Which bird is the fastest in the world?",
+      "options": ["Eagle", "Swift", "Albatross", "Peregrine falcon"],
       "correctAnswerIndex": 3
     },
     {
       "id": "nat-007",
-      "prompt": "Где обитают кенгуру в дикой природе?",
-      "options": ["Африка", "Южная Америка", "Австралия", "Индия"],
+      "prompt": "Where do kangaroos live in the wild?",
+      "options": ["Africa", "South America", "Australia", "India"],
       "correctAnswerIndex": 2
     },
     {
       "id": "nat-008",
-      "prompt": "Сколько лет живёт гигантская черепаха?",
-      "options": ["До 50 лет", "До 80 лет", "До 100 лет", "До 150 лет и более"],
+      "prompt": "How long does a giant tortoise live?",
+      "options": ["Up to 50 years", "Up to 80 years", "Up to 100 years", "Up to 150 years or more"],
       "correctAnswerIndex": 3
     },
     {
       "id": "nat-009",
-      "prompt": "Какое животное спит стоя?",
-      "options": ["Медведь", "Лошадь", "Жираф", "Слон"],
+      "prompt": "Which animal sleeps standing up?",
+      "options": ["Bear", "Horse", "Giraffe", "Elephant"],
       "correctAnswerIndex": 1
     },
     {
       "id": "nat-010",
-      "prompt": "Как называется процесс, при котором растения производят кислород?",
-      "options": ["Дыхание", "Фотосинтез", "Ферментация", "Транспирация"],
+      "prompt": "What is the process called by which plants produce oxygen?",
+      "options": ["Respiration", "Photosynthesis", "Fermentation", "Transpiration"],
       "correctAnswerIndex": 1
     },
     {
       "id": "nat-011",
-      "prompt": "Сколько видов акул существует?",
-      "options": ["Около 50", "Около 150", "Около 300", "Более 500"],
+      "prompt": "How many species of sharks exist?",
+      "options": ["About 50", "About 150", "About 300", "More than 500"],
       "correctAnswerIndex": 3
     },
     {
       "id": "nat-012",
-      "prompt": "Какой океан является самым большим?",
-      "options": ["Атлантический", "Индийский", "Тихий", "Северный Ледовитый"],
+      "prompt": "Which ocean is the largest?",
+      "options": ["Atlantic", "Indian", "Pacific", "Arctic"],
       "correctAnswerIndex": 2
     },
     {
       "id": "nat-013",
-      "prompt": "Что такое «мицелий»?",
-      "options": ["Корень дерева", "Подземная часть гриба", "Вид водоросли", "Тип мха"],
+      "prompt": "What is \"mycelium\"?",
+      "options": ["A tree root", "The underground part of a fungus", "A type of algae", "A type of moss"],
       "correctAnswerIndex": 1
     },
     {
       "id": "nat-014",
-      "prompt": "Какое животное имеет самый большой мозг относительно размера тела?",
-      "options": ["Дельфин", "Человек", "Муравей", "Ворона"],
+      "prompt": "Which animal has the largest brain relative to body size?",
+      "options": ["Dolphin", "Human", "Ant", "Crow"],
       "correctAnswerIndex": 0
     },
     {
       "id": "nat-015",
-      "prompt": "Сколько ног у насекомого?",
+      "prompt": "How many legs does an insect have?",
       "options": ["4", "6", "8", "10"],
       "correctAnswerIndex": 1
     },
     {
       "id": "nat-016",
-      "prompt": "Какой газ выделяют растения при фотосинтезе?",
-      "options": ["Углекислый газ", "Азот", "Кислород", "Водород"],
+      "prompt": "Which gas do plants release during photosynthesis?",
+      "options": ["Carbon dioxide", "Nitrogen", "Oxygen", "Hydrogen"],
       "correctAnswerIndex": 2
     },
     {
       "id": "nat-017",
-      "prompt": "Как называется самая маленькая птица в мире?",
-      "options": ["Крапивник", "Колибри", "Воробей", "Зяблик"],
+      "prompt": "What is the smallest bird in the world called?",
+      "options": ["Wren", "Hummingbird", "Sparrow", "Finch"],
       "correctAnswerIndex": 1
     },
     {
       "id": "nat-018",
-      "prompt": "Какое животное является единственным млекопитающим, способным к настоящему полёту?",
-      "options": ["Белка-летяга", "Летучая мышь", "Сахарная поссум", "Шерстокрыл"],
+      "prompt": "Which animal is the only mammal capable of true flight?",
+      "options": ["Flying squirrel", "Bat", "Sugar glider", "Colugo"],
       "correctAnswerIndex": 1
     },
     {
       "id": "nat-019",
-      "prompt": "Сколько лет в среднем живёт дерево секвойя?",
-      "options": ["До 500 лет", "До 1000 лет", "До 2000 лет", "Более 3000 лет"],
+      "prompt": "What is the average lifespan of a redwood tree?",
+      "options": ["Up to 500 years", "Up to 1000 years", "Up to 2000 years", "More than 3000 years"],
       "correctAnswerIndex": 3
     },
     {
       "id": "nat-020",
-      "prompt": "Как называется миграция птиц на зиму?",
-      "options": ["Дисперсия", "Спячка", "Перелёт", "Инстинкт"],
+      "prompt": "What is winter bird migration called?",
+      "options": ["Dispersal", "Hibernation", "Migration", "Instinct"],
       "correctAnswerIndex": 2
     }
   ]

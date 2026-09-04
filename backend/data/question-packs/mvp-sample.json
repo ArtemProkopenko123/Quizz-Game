@@ -1,128 +1,128 @@
 {
   "id": "mvp-general-knowledge",
-  "title": "Общие знания",
+  "title": "General Knowledge",
   "emoji": "🧠",
   "version": 3,
-  "language": "ru",
+  "language": "en",
   "questions": [
     {
       "id": "q-001",
-      "prompt": "Какая планета является самой большой в Солнечной системе?",
-      "options": ["Сатурн", "Нептун", "Юпитер", "Уран"],
+      "prompt": "Which planet is the largest in the Solar System?",
+      "options": ["Saturn", "Neptune", "Jupiter", "Uranus"],
       "correctAnswerIndex": 2
     },
     {
       "id": "q-002",
-      "prompt": "В каком году Гагарин совершил первый полёт в космос?",
+      "prompt": "In what year did Gagarin make the first flight into space?",
       "options": ["1957", "1959", "1963", "1961"],
       "correctAnswerIndex": 3
     },
     {
       "id": "q-003",
-      "prompt": "Сколько струн у классической гитары?",
+      "prompt": "How many strings does a classical guitar have?",
       "options": ["4", "5", "6", "7"],
       "correctAnswerIndex": 2
     },
     {
       "id": "q-004",
-      "prompt": "Какой химический символ у золота?",
+      "prompt": "What is the chemical symbol for gold?",
       "options": ["Go", "Gl", "Gd", "Au"],
       "correctAnswerIndex": 3
     },
     {
       "id": "q-005",
-      "prompt": "Столица какой страны — Канберра?",
-      "options": ["Новая Зеландия", "Австралия", "Канада", "ЮАР"],
+      "prompt": "Canberra is the capital of which country?",
+      "options": ["New Zealand", "Australia", "Canada", "South Africa"],
       "correctAnswerIndex": 1
     },
     {
       "id": "q-006",
-      "prompt": "Сколько цветов в радуге?",
+      "prompt": "How many colors are in the rainbow?",
       "options": ["5", "6", "8", "7"],
       "correctAnswerIndex": 3
     },
     {
       "id": "q-007",
-      "prompt": "Кто написал роман «Преступление и наказание»?",
-      "options": ["Толстой", "Тургенев", "Достоевский", "Чехов"],
+      "prompt": "Who wrote the novel \"Crime and Punishment\"?",
+      "options": ["Tolstoy", "Turgenev", "Dostoevsky", "Chekhov"],
       "correctAnswerIndex": 2
     },
     {
       "id": "q-008",
-      "prompt": "Какой орган тела вырабатывает инсулин?",
-      "options": ["Печень", "Почки", "Поджелудочная железа", "Желудок"],
+      "prompt": "Which organ in the body produces insulin?",
+      "options": ["Liver", "Kidneys", "Pancreas", "Stomach"],
       "correctAnswerIndex": 2
     },
     {
       "id": "q-009",
-      "prompt": "Чему равна скорость света в вакууме (км/с)?",
-      "options": ["200 000", "299 792", "350 000", "150 000"],
+      "prompt": "What is the speed of light in a vacuum (km/s)?",
+      "options": ["200,000", "299,792", "350,000", "150,000"],
       "correctAnswerIndex": 1
     },
     {
       "id": "q-010",
-      "prompt": "Какая страна является крупнейшей по площади?",
-      "options": ["Канада", "Китай", "США", "Россия"],
+      "prompt": "Which country has the largest area?",
+      "options": ["Canada", "China", "USA", "Russia"],
       "correctAnswerIndex": 3
     },
     {
       "id": "q-011",
-      "prompt": "Сколько граней у куба?",
+      "prompt": "How many faces does a cube have?",
       "options": ["4", "6", "8", "12"],
       "correctAnswerIndex": 1
     },
     {
       "id": "q-012",
-      "prompt": "Как называется столица Японии?",
-      "options": ["Осака", "Токио", "Киото", "Нагоя"],
+      "prompt": "What is the capital of Japan?",
+      "options": ["Osaka", "Tokyo", "Kyoto", "Nagoya"],
       "correctAnswerIndex": 1
     },
     {
       "id": "q-013",
-      "prompt": "В каком году закончилась Вторая мировая война?",
+      "prompt": "In what year did World War II end?",
       "options": ["1943", "1944", "1945", "1946"],
       "correctAnswerIndex": 2
     },
     {
       "id": "q-014",
-      "prompt": "Какой язык является наиболее распространённым в мире по числу носителей?",
-      "options": ["Испанский", "Английский", "Хинди", "Китайский (мандарин)"],
+      "prompt": "Which language has the most native speakers in the world?",
+      "options": ["Spanish", "English", "Hindi", "Chinese (Mandarin)"],
       "correctAnswerIndex": 3
     },
     {
       "id": "q-015",
-      "prompt": "Сколько минут в сутках?",
+      "prompt": "How many minutes are there in a day?",
       "options": ["720", "1080", "1440", "2880"],
       "correctAnswerIndex": 2
     },
     {
       "id": "q-016",
-      "prompt": "На каком континенте находится Египет?",
-      "options": ["Азия", "Африка", "Ближний Восток", "Европа"],
+      "prompt": "On which continent is Egypt located?",
+      "options": ["Asia", "Africa", "Middle East", "Europe"],
       "correctAnswerIndex": 1
     },
     {
       "id": "q-017",
-      "prompt": "Кто написал «Войну и мир»?",
-      "options": ["Достоевский", "Чехов", "Тургенев", "Толстой"],
+      "prompt": "Who wrote \"War and Peace\"?",
+      "options": ["Dostoevsky", "Chekhov", "Turgenev", "Tolstoy"],
       "correctAnswerIndex": 3
     },
     {
       "id": "q-018",
-      "prompt": "Сколько планет в Солнечной системе?",
+      "prompt": "How many planets are in the Solar System?",
       "options": ["7", "8", "9", "10"],
       "correctAnswerIndex": 1
     },
     {
       "id": "q-019",
-      "prompt": "Какая страна подарила Нью-Йорку статую Свободы?",
-      "options": ["Великобритания", "Испания", "Франция", "Италия"],
+      "prompt": "Which country gave New York the Statue of Liberty?",
+      "options": ["United Kingdom", "Spain", "France", "Italy"],
       "correctAnswerIndex": 2
     },
     {
       "id": "q-020",
-      "prompt": "Как называется самая длинная река в мире?",
-      "options": ["Амазонка", "Нил", "Янцзы", "Миссисипи"],
+      "prompt": "What is the longest river in the world?",
+      "options": ["Amazon", "Nile", "Yangtze", "Mississippi"],
       "correctAnswerIndex": 1
     }
   ]

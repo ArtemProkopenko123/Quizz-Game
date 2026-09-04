@@ -1,128 +1,128 @@
 {
   "id": "music",
-  "title": "Музыка",
+  "title": "Music",
   "emoji": "🎵",
   "version": 2,
-  "language": "ru",
+  "language": "en",
   "questions": [
     {
       "id": "mus-001",
-      "prompt": "Кто написал «Лунную сонату»?",
-      "options": ["Моцарт", "Шопен", "Бах", "Бетховен"],
+      "prompt": "Who composed \"Moonlight Sonata\"?",
+      "options": ["Mozart", "Chopin", "Bach", "Beethoven"],
       "correctAnswerIndex": 3
     },
     {
       "id": "mus-002",
-      "prompt": "Сколько нот в музыкальной октаве?",
+      "prompt": "How many notes are in a musical octave?",
       "options": ["5", "6", "7", "8"],
       "correctAnswerIndex": 2
     },
     {
       "id": "mus-003",
-      "prompt": "Из какой страны группа Queen?",
-      "options": ["США", "Австралия", "Канада", "Великобритания"],
+      "prompt": "Which country is the band Queen from?",
+      "options": ["USA", "Australia", "Canada", "United Kingdom"],
       "correctAnswerIndex": 3
     },
     {
       "id": "mus-004",
-      "prompt": "Сколько струн у скрипки?",
+      "prompt": "How many strings does a violin have?",
       "options": ["3", "4", "5", "6"],
       "correctAnswerIndex": 1
     },
     {
       "id": "mus-005",
-      "prompt": "Как называется самый низкий мужской певческий голос?",
-      "options": ["Тенор", "Баритон", "Бас", "Альт"],
+      "prompt": "What is the lowest male singing voice called?",
+      "options": ["Tenor", "Baritone", "Bass", "Alto"],
       "correctAnswerIndex": 2
     },
     {
       "id": "mus-006",
-      "prompt": "Какой инструмент создал скрипичный мастер Страдивари?",
-      "options": ["Пианино", "Арфа", "Гитара", "Скрипка"],
+      "prompt": "Which instrument did the luthier Stradivari craft?",
+      "options": ["Piano", "Harp", "Guitar", "Violin"],
       "correctAnswerIndex": 3
     },
     {
       "id": "mus-007",
-      "prompt": "Как называется первая нота в латинской нотации?",
+      "prompt": "What is the first note in solfège notation?",
       "options": ["Re", "Do", "Mi", "La"],
       "correctAnswerIndex": 1
     },
     {
       "id": "mus-008",
-      "prompt": "Кто записал альбом «Thriller» — самый продаваемый в истории?",
-      "options": ["Принс", "Элвис Пресли", "Мадонна", "Майкл Джексон"],
+      "prompt": "Who recorded \"Thriller\", the best-selling album of all time?",
+      "options": ["Prince", "Elvis Presley", "Madonna", "Michael Jackson"],
       "correctAnswerIndex": 3
     },
     {
       "id": "mus-009",
-      "prompt": "Как называется музыкальный стиль, возникший в Ямайке в 1960-х годах?",
-      "options": ["Самба", "Регги", "Фламенко", "Бозза-нова"],
+      "prompt": "What is the name of the musical style that originated in Jamaica in the 1960s?",
+      "options": ["Samba", "Reggae", "Flamenco", "Bossa Nova"],
       "correctAnswerIndex": 1
     },
     {
       "id": "mus-010",
-      "prompt": "Кто из этих музыкантов известен под прозвищем «Король рок-н-ролла»?",
-      "options": ["Чак Берри", "Элвис Пресли", "Литтл Ричард", "Джерри Ли Льюис"],
+      "prompt": "Which of these musicians is known as the \"King of Rock and Roll\"?",
+      "options": ["Chuck Berry", "Elvis Presley", "Little Richard", "Jerry Lee Lewis"],
       "correctAnswerIndex": 1
     },
     {
       "id": "mus-011",
-      "prompt": "Сколько клавиш на стандартном рояле?",
+      "prompt": "How many keys are on a standard piano?",
       "options": ["72", "76", "88", "96"],
       "correctAnswerIndex": 2
     },
     {
       "id": "mus-012",
-      "prompt": "Какая группа исполнила песню «Bohemian Rhapsody»?",
+      "prompt": "Which band performed \"Bohemian Rhapsody\"?",
       "options": ["The Rolling Stones", "Queen", "Led Zeppelin", "Pink Floyd"],
       "correctAnswerIndex": 1
     },
     {
       "id": "mus-013",
-      "prompt": "Из какой страны происходит жанр «опера»?",
-      "options": ["Германия", "Франция", "Испания", "Италия"],
+      "prompt": "Which country does the genre \"opera\" come from?",
+      "options": ["Germany", "France", "Spain", "Italy"],
       "correctAnswerIndex": 3
     },
     {
       "id": "mus-014",
-      "prompt": "Кто написал «Симфонию № 9» (с хором «Ода к радости»)?",
-      "options": ["Шуберт", "Гайдн", "Бетховен", "Брамс"],
+      "prompt": "Who composed \"Symphony No. 9\" (with the choral \"Ode to Joy\")?",
+      "options": ["Schubert", "Haydn", "Beethoven", "Brahms"],
       "correctAnswerIndex": 2
     },
     {
       "id": "mus-015",
-      "prompt": "Как называется темп, означающий «очень медленно» в музыке?",
-      "options": ["Анданте", "Аллегро", "Ларго", "Престо"],
+      "prompt": "What tempo marking means \"very slow\" in music?",
+      "options": ["Andante", "Allegro", "Largo", "Presto"],
       "correctAnswerIndex": 2
     },
     {
       "id": "mus-016",
-      "prompt": "Какой инструмент используется в традиционной шотландской музыке?",
-      "options": ["Банджо", "Мандолина", "Волынка", "Аккордеон"],
+      "prompt": "Which instrument is used in traditional Scottish music?",
+      "options": ["Banjo", "Mandolin", "Bagpipes", "Accordion"],
       "correctAnswerIndex": 2
     },
     {
       "id": "mus-017",
-      "prompt": "В каком городе находится знаменитый концертный зал Карнеги-холл?",
-      "options": ["Лондон", "Вена", "Нью-Йорк", "Берлин"],
+      "prompt": "In which city is the famous Carnegie Hall concert venue located?",
+      "options": ["London", "Vienna", "New York", "Berlin"],
       "correctAnswerIndex": 2
     },
     {
       "id": "mus-018",
-      "prompt": "Как называется пауза между музыкальными строфами в рэп-треке?",
-      "options": ["Куплет", "Бридж", "Хук", "Брейк"],
+      "prompt": "What is the pause between verses in a rap track called?",
+      "options": ["Verse", "Bridge", "Hook", "Break"],
       "correctAnswerIndex": 3
     },
     {
       "id": "mus-019",
-      "prompt": "Из какой страны родом Моцарт?",
-      "options": ["Германия", "Австрия", "Швейцария", "Чехия"],
+      "prompt": "Which country is Mozart from?",
+      "options": ["Germany", "Austria", "Switzerland", "Czech Republic"],
       "correctAnswerIndex": 1
     },
     {
       "id": "mus-020",
-      "prompt": "Как называется музыкальный знак, повышающий ноту на полтона?",
-      "options": ["Бемоль", "Бекар", "Диез", "Фермата"],
+      "prompt": "What is the musical symbol that raises a note by a semitone called?",
+      "options": ["Flat", "Natural", "Sharp", "Fermata"],
       "correctAnswerIndex": 2
     }
   ]

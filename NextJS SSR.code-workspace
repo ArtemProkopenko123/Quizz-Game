@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "."
+		},
+		{
+			"path": "../next-js-app"
 		}
 	],
 	"settings": {}

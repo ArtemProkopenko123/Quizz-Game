@@ -1,128 +1,128 @@
 {
   "id": "science",
-  "title": "Наука",
+  "title": "Science",
   "emoji": "🔬",
   "version": 2,
-  "language": "ru",
+  "language": "en",
   "questions": [
     {
       "id": "sci-001",
-      "prompt": "Какой газ составляет большую часть атмосферы Земли?",
-      "options": ["Кислород", "Углекислый газ", "Азот", "Аргон"],
+      "prompt": "Which gas makes up most of Earth's atmosphere?",
+      "options": ["Oxygen", "Carbon dioxide", "Nitrogen", "Argon"],
       "correctAnswerIndex": 2
     },
     {
       "id": "sci-002",
-      "prompt": "Сколько хромосом содержит клетка здорового человека?",
+      "prompt": "How many chromosomes does a healthy human cell contain?",
       "options": ["23", "46", "48", "36"],
       "correctAnswerIndex": 1
     },
     {
       "id": "sci-003",
-      "prompt": "Кто открыл пенициллин?",
-      "options": ["Луи Пастер", "Александр Флеминг", "Мария Кюри", "Роберт Кох"],
+      "prompt": "Who discovered penicillin?",
+      "options": ["Louis Pasteur", "Alexander Fleming", "Marie Curie", "Robert Koch"],
       "correctAnswerIndex": 1
     },
     {
       "id": "sci-004",
-      "prompt": "Какой химический символ у железа?",
+      "prompt": "What is the chemical symbol for iron?",
       "options": ["Ir", "In", "Fe", "Fr"],
       "correctAnswerIndex": 2
     },
     {
       "id": "sci-005",
-      "prompt": "Чему равно ускорение свободного падения на Земле (м/с²)?",
-      "options": ["7,8", "9,8", "11,2", "8,5"],
+      "prompt": "What is the acceleration due to gravity on Earth (m/s²)?",
+      "options": ["7.8", "9.8", "11.2", "8.5"],
       "correctAnswerIndex": 1
     },
     {
       "id": "sci-006",
-      "prompt": "Как называется единица измерения электрического тока?",
-      "options": ["Вольт", "Ватт", "Ом", "Ампер"],
+      "prompt": "What is the unit of electric current called?",
+      "options": ["Volt", "Watt", "Ohm", "Ampere"],
       "correctAnswerIndex": 3
     },
     {
       "id": "sci-007",
-      "prompt": "Из чего состоит молекула воды?",
+      "prompt": "What is a water molecule made of?",
       "options": ["H₃O", "HO₂", "H₂O", "H₂O₂"],
       "correctAnswerIndex": 2
     },
     {
       "id": "sci-008",
-      "prompt": "Какая планета ближайшая к Солнцу?",
-      "options": ["Венера", "Земля", "Меркурий", "Марс"],
+      "prompt": "Which planet is closest to the Sun?",
+      "options": ["Venus", "Earth", "Mercury", "Mars"],
       "correctAnswerIndex": 2
     },
     {
       "id": "sci-009",
-      "prompt": "Кто сформулировал три закона движения?",
-      "options": ["Эйнштейн", "Ньютон", "Галилей", "Кеплер"],
+      "prompt": "Who formulated the three laws of motion?",
+      "options": ["Einstein", "Newton", "Galileo", "Kepler"],
       "correctAnswerIndex": 1
     },
     {
       "id": "sci-010",
-      "prompt": "Сколько элементов в периодической таблице Менделеева (на 2024 год)?",
+      "prompt": "How many elements are in the periodic table (as of 2024)?",
       "options": ["108", "112", "118", "124"],
       "correctAnswerIndex": 2
     },
     {
       "id": "sci-011",
-      "prompt": "Что изучает сейсмология?",
-      "options": ["Землетрясения", "Атмосферу", "Океаны", "Звёзды"],
+      "prompt": "What does seismology study?",
+      "options": ["Earthquakes", "The atmosphere", "Oceans", "Stars"],
       "correctAnswerIndex": 0
     },
     {
       "id": "sci-012",
-      "prompt": "Как называется самая маленькая частица химического элемента?",
-      "options": ["Молекула", "Ион", "Атом", "Нейтрон"],
+      "prompt": "What is the smallest particle of a chemical element called?",
+      "options": ["Molecule", "Ion", "Atom", "Neutron"],
       "correctAnswerIndex": 2
     },
     {
       "id": "sci-013",
-      "prompt": "Какой орган человека производит инсулин?",
-      "options": ["Печень", "Почки", "Желудок", "Поджелудочная железа"],
+      "prompt": "Which human organ produces insulin?",
+      "options": ["Liver", "Kidneys", "Stomach", "Pancreas"],
       "correctAnswerIndex": 3
     },
     {
       "id": "sci-014",
-      "prompt": "Сколько миллисекунд в одной секунде?",
-      "options": ["10", "100", "1000", "10 000"],
+      "prompt": "How many milliseconds are in one second?",
+      "options": ["10", "100", "1000", "10,000"],
       "correctAnswerIndex": 2
     },
     {
       "id": "sci-015",
-      "prompt": "Как называется процесс превращения жидкости в газ при нагреве?",
-      "options": ["Конденсация", "Испарение", "Сублимация", "Кристаллизация"],
+      "prompt": "What is the process called when a liquid turns into a gas upon heating?",
+      "options": ["Condensation", "Evaporation", "Sublimation", "Crystallization"],
       "correctAnswerIndex": 1
     },
     {
       "id": "sci-016",
-      "prompt": "Какой металл является самым лёгким?",
-      "options": ["Алюминий", "Магний", "Литий", "Бериллий"],
+      "prompt": "Which metal is the lightest?",
+      "options": ["Aluminum", "Magnesium", "Lithium", "Beryllium"],
       "correctAnswerIndex": 2
     },
     {
       "id": "sci-017",
-      "prompt": "Что такое «черная дыра» в астрономии?",
-      "options": ["Погасшая звезда", "Область пространства с огромной гравитацией", "Скопление тёмной материи", "Пустое межзвёздное пространство"],
+      "prompt": "What is a \"black hole\" in astronomy?",
+      "options": ["A burned-out star", "A region of space with immense gravity", "A cluster of dark matter", "Empty interstellar space"],
       "correctAnswerIndex": 1
     },
     {
       "id": "sci-018",
-      "prompt": "Как называется ДНК в развёрнутом виде, содержащаяся в ядре клетки?",
-      "options": ["Хромосома", "Нуклеотид", "Рибосома", "Митохондрия"],
+      "prompt": "What is unraveled DNA contained in the cell nucleus called?",
+      "options": ["Chromosome", "Nucleotide", "Ribosome", "Mitochondrion"],
       "correctAnswerIndex": 0
     },
     {
       "id": "sci-019",
-      "prompt": "Какой учёный разработал теорию относительности?",
-      "options": ["Нильс Бор", "Макс Планк", "Альберт Эйнштейн", "Эрнест Резерфорд"],
+      "prompt": "Which scientist developed the theory of relativity?",
+      "options": ["Niels Bohr", "Max Planck", "Albert Einstein", "Ernest Rutherford"],
       "correctAnswerIndex": 2
     },
     {
       "id": "sci-020",
-      "prompt": "Как называется наука о наследственности и изменчивости организмов?",
-      "options": ["Цитология", "Генетика", "Эволюция", "Физиология"],
+      "prompt": "What is the science of heredity and variation in organisms called?",
+      "options": ["Cytology", "Genetics", "Evolution", "Physiology"],
       "correctAnswerIndex": 1
     }
   ]
